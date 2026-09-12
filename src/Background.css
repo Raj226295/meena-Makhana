@@ -1,0 +1,10 @@
+body{background:#e7f3d4 url('/homepage-background.png') center top/100% auto no-repeat fixed}
+#root{position:relative}
+main{background:transparent}
+.products{margin:28px clamp(12px,3vw,48px);border-radius:28px;background:rgba(255,255,246,.9);box-shadow:0 18px 50px rgba(13,80,43,.15);backdrop-filter:blur(9px)}
+.quality-strip,.final-strip{background:rgba(239,248,221,.88);backdrop-filter:blur(8px)}
+.modes{margin:18px clamp(10px,2vw,30px);border-radius:24px;background:rgba(255,252,235,.76);backdrop-filter:blur(6px)}
+.about{margin:24px 0;background:rgba(255,253,239,.9);backdrop-filter:blur(8px)}
+.cards article{background:rgba(255,255,255,.94)}
+.nav-wrap{background:linear-gradient(180deg,rgba(247,251,247,.94),rgba(247,251,247,.7) 70%,transparent)}
+@media(max-width:700px){body{background-size:auto 100vh;background-position:center top;background-attachment:scroll}.products{margin:16px 8px;border-radius:20px}.modes{margin:12px 7px}.about{margin:16px 0}}

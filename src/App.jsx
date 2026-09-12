@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import './Nav.css'
+import './Background.css'
 
 const products = [
   { name:'Meena Premium', type:'Plain Makhana', price:180, image:'/premium-yellow-new.png' },
