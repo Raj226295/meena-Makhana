@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
 const products = [
@@ -8,16 +8,23 @@ const products = [
   { name:'Sandesh Organic', type:'Organic Makhana', price:170, image:'/sandesh-new.jpeg' },
 ]
 const filters=['All Products','Plain Makhana','Roasted Makhana','Flavoured Makhana','Gift Packs']
+const banners=[
+ {src:'/banner-nature.png',alt:'Meena Green makhana — from nature’s fields to your home'},
+ {src:'/banner-offer.png',alt:'Special offer — up to 20% off on makhana products'},
+ {src:'/banner-superfood.png',alt:'Premium Makhana — nature’s superfood'},
+]
 
 function App(){
- const [filter,setFilter]=useState('All Products'),[cart,setCart]=useState(0),[liked,setLiked]=useState([]),[menu,setMenu]=useState(false)
+ const [filter,setFilter]=useState('All Products'),[cart,setCart]=useState(0),[liked,setLiked]=useState([]),[menu,setMenu]=useState(false),[slide,setSlide]=useState(0),[paused,setPaused]=useState(false)
  const shown=useMemo(()=>filter==='All Products'||filter==='Plain Makhana'?products:products.filter(p=>p.type===filter),[filter])
  const toggle=(name)=>setLiked(x=>x.includes(name)?x.filter(v=>v!==name):[...x,name])
+ useEffect(()=>{if(paused)return;const timer=setInterval(()=>setSlide(s=>(s+1)%banners.length),5000);return()=>clearInterval(timer)},[paused])
+ const moveSlide=(direction)=>setSlide(s=>(s+direction+banners.length)%banners.length)
  return <>
   <div className="promise-bar"><span>🌿 100% Natural　|　⊘ No Preservatives　|　⚡ Rich in Nutrition　|　🤝 Trusted by Families</span><b>🚚 Free Shipping on Orders Above ₹499</b></div>
   <header className="site-header"><a className="logo" href="#home"><img src="/logo-new.png" alt="Meena Green"/></a><button className="menu" onClick={()=>setMenu(!menu)} aria-label="Toggle menu">☰</button><nav className={menu?'open':''}><a className="active" href="#home">Home</a><a href="#products">Products</a><a href="#about">About Us</a><a href="#contact">Contact</a></nav><div className="actions"><button aria-label="Search">⌕</button><button aria-label="Account">♟</button><button aria-label={'Cart '+cart}>🛒<i>{cart}</i></button></div></header>
   <main>
-   <section className="hero" id="home"><div className="hero-copy"><span>Pure Goodness</span><h1>Premium<br/>Makhana</h1><p>Healthy Snacking for a Better Tomorrow</p><div className="hero-points"><b>◉<small>100%<br/>Natural</small></b><b>♧<small>Rich in<br/>Protein</small></b><b>♢<small>Boosts<br/>Immunity</small></b><b>♥<small>Good for<br/>Heart</small></b></div><a className="primary" href="#products">Shop Now　→</a></div><div className="hero-products"><img className="pack purple" src="/perfect-purple-new.png" alt="Perfect-2 makhana"/><img className="pack main-pack" src="/premium-yellow-new.png" alt="Meena premium makhana"/><img className="pack blue" src="/perfect-yellow-new.png" alt="Perfect premium makhana"/><div className="bowl">● ● ●<br/> ● ● ● ●</div></div></section>
+   <section className="banner-carousel" id="home" aria-label="Featured offers" onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)} onFocus={()=>setPaused(true)} onBlur={()=>setPaused(false)}><div className="banner-track" style={{transform:`translateX(-${slide*100}%)`}}>{banners.map((banner,index)=><img key={banner.src} src={banner.src} alt={banner.alt} aria-hidden={slide!==index}/>)}</div><button className="banner-arrow prev" onClick={()=>moveSlide(-1)} aria-label="Previous banner">‹</button><button className="banner-arrow next" onClick={()=>moveSlide(1)} aria-label="Next banner">›</button><div className="banner-dots">{banners.map((_,index)=><button key={index} className={slide===index?'active':''} onClick={()=>setSlide(index)} aria-label={`Show banner ${index+1}`} aria-current={slide===index?'true':undefined}/>)}</div></section>
    <section className="quality-strip"><div>🌿 <span><b>Premium Quality</b><small>Carefully selected</small></span></div><div>🌱 <span><b>Hygienically Packed</b><small>Freshness sealed</small></span></div><div>♨ <span><b>Farm Fresh Goodness</b><small>From Bihar farms</small></span></div><div>♡ <span><b>A Healthier You Always</b><small>Wholesome everyday</small></span></div></section>
    <section className="products section" id="products"><div className="section-heading"><span>🌿</span><div><h2>Our Products</h2><p>Explore our range of premium makhana, carefully sourced and packed with purity.</p></div><span>🌿</span></div><div className="filters">{filters.map(f=><button className={filter===f?'selected':''} onClick={()=>setFilter(f)} key={f}>{f}</button>)}</div><div className="cards">{shown.length?shown.map(p=><article key={p.name}><button className={'heart '+(liked.includes(p.name)?'liked':'')} onClick={()=>toggle(p.name)} aria-label={'Favourite '+p.name}>♥</button><img src={p.image} alt={p.name}/><h3>{p.name}</h3><p>{p.type}</p><small>250g</small><strong>₹{p.price}</strong><button className="add" onClick={()=>setCart(c=>c+1)}>🛒　Add to Cart</button></article>):<p className="empty">Coming soon — our newest flavours are being prepared.</p>}</div></section>
    <section className="nature"><div><h2>Choose Your Way<br/>to Healthy Living</h2><p>Available in Retail and Wholesale<br/>for every need.</p><a href="#modes">Explore Now　→</a></div><div className="nature-bowl"><span>Nature's<br/><i>Superfood</i></span><div>● ● ● ●<br/> ● ● ● ● ●<br/>● ● ● ●</div></div><ul><li>♙ Low in Calories</li><li>♧ High in Protein</li><li>✺ Rich in Antioxidants</li><li>⌁ Gluten Free</li></ul></section>
