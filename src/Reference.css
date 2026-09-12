@@ -1,0 +1,25 @@
+body{background:#fff}
+.promise-bar{background:#e51512;height:30px}
+.ribbon-track{animation-duration:34s}
+.nav-wrap{position:sticky;padding:0;background:#fff;box-shadow:0 4px 16px #0b4d2515}
+.site-header{height:84px;border:0;border-radius:0;box-shadow:none;background:#fff;padding:8px max(4vw,28px);grid-template-columns:180px 200px 1fr 170px}
+.site-header .logo{height:62px;border-right:0;padding-right:12px}.site-header .logo img{width:130px;height:60px}
+.delivery{padding-left:0}.delivery>svg{width:23px;height:23px}.delivery p{font-size:11px}.delivery strong{font-size:13px}
+.site-header nav{gap:22px}.site-header nav a{padding:13px 9px;border-radius:0;font-size:14px}.site-header nav a.active{background:transparent}.site-header nav a:after{bottom:5px;left:25%;right:25%}
+.actions{border-left:0;padding-left:6px}.actions button{width:42px;height:42px;background:transparent;border:0}.actions button:hover{background:#eef9e9}
+.banner-carousel{margin:0;aspect-ratio:1964/801}
+.quality-strip{background:#fff9e8;border-top:1px solid #f4ead0;border-bottom:1px solid #f4ead0}
+.products{margin:0;border-radius:0;background:linear-gradient(180deg,#a8e1ba,#dff2bf);box-shadow:none;padding-top:38px;padding-bottom:48px}
+.products .section-heading h2{font-size:34px}.products .section-heading p{color:#48684f}
+.filters{margin-top:8px}.filters button{background:#fff9e9;border-color:#bed8bd}.filters .selected{background:#075b33}
+.cards article{border:0;background:#fffdf5;box-shadow:0 9px 22px #174b2820}.cards article>img{height:230px}
+.nature{background:linear-gradient(90deg,#6d3518,#9b582d 48%,#5b2b16);min-height:260px;border-top:9px solid #4d2816;border-bottom:9px solid #4d2816}.nature h2{color:#fff7d9}.nature a{background:#f4cd52}
+.nature-bowl div{background:#c78951;box-shadow:0 12px 25px #271207aa}.nature ul{color:#fff1cf}
+.modes{margin:0;border-radius:0;background:#fffaf0;padding-top:34px;padding-bottom:34px}.modes article{box-shadow:0 8px 22px #23442b17}
+.about{margin:0;background:#fdf8e9;border-top:1px solid #eadfc4;border-bottom:1px solid #eadfc4;backdrop-filter:none}
+.about h2,.section-heading h2{color:#0b4f2d}.about-visual{background:linear-gradient(90deg,#dff1c8,#7aaf58)}
+.final-strip{background:#eff7df}
+footer{background:linear-gradient(145deg,#003c29,#001f18)}
+@media(max-width:1100px){.site-header{grid-template-columns:130px 160px 1fr 145px}.site-header nav{gap:5px}}
+@media(max-width:780px){.site-header{grid-template-columns:90px 1fr 40px 125px;height:72px;padding:5px 12px}.site-header .logo img{width:78px}.site-header nav{top:75px;border-radius:0}.banner-carousel{aspect-ratio:16/8.6}.quality-strip{padding:16px 12px}.products{padding-left:12px;padding-right:12px}.nature{border-width:5px}.modes{padding-left:12px;padding-right:12px}}
+@media(max-width:480px){.site-header{grid-template-columns:78px 1fr 38px 85px}.delivery strong{font-size:11px}}

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import './Nav.css'
 import './Background.css'
+import './Reference.css'
 
 const products = [
   { name:'Meena Premium', type:'Plain Makhana', price:180, image:'/premium-yellow-new.png' },
@@ -18,7 +19,7 @@ const banners=[
 
 const iconPaths={home:'M3 11.5 12 4l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',pin:'M12 22s7-6 7-13A7 7 0 0 0 5 9c0 7 7 13 7 13Zm0-10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z',search:'m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z',user:'M20 21a8 8 0 0 0-16 0m12-13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',cart:'M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6m4 13h.01M17 20h.01',menu:'M4 7h16M4 12h16M4 17h16',chevron:'m8 10 4 4 4-4'}
 function Icon({name,size=24}){return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill={name==='home'?'currentColor':'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={iconPaths[name]}/></svg>}
-const ribbonText=<><span>🌿 100% Natural</span><span>⊘ No Preservatives</span><span>⚡ Rich in Nutrition</span><span>🤝 Trusted by Families</span><span>🚚 Free Shipping Above ₹499</span></>
+const ribbonText=<><span>🌿 100% Pure Makhana</span><span>Farm Fresh</span><span>No Preservatives</span><span>A Healthy Snack for Every Home</span><span>🚚 Deliver to Purnea, Bihar</span></>
 
 function App(){
  const [filter,setFilter]=useState('All Products'),[cart,setCart]=useState(0),[liked,setLiked]=useState([]),[menu,setMenu]=useState(false),[slide,setSlide]=useState(0),[paused,setPaused]=useState(false)
