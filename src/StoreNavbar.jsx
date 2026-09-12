@@ -2,18 +2,18 @@ import {useState} from 'react'
 import './StoreNavbar.css'
 
 function SearchIcon(){return <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>}
-function RibbonIcon({name}){const icons={bowl:<><path d="M5 11h14l-1.2 5.2A4 4 0 0 1 13.9 19H10a4 4 0 0 1-3.9-2.8L5 11Z"/><path d="M7 8c.9-2 2.9-3 5-3s4.1 1 5 3M9 8h.01M12 7h.01M15 8h.01"/></>,leaf:<><path d="M20 4C12 4 6 9 6 17c8 0 14-5 14-13Z"/><path d="M6 17 20 4M6 17c-1.2-3.8-.4-7.1 2.4-10"/></>,truck:<><path d="M3 8h10v8H3zM13 11h4l3 3v2h-7zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM3 5h6M1 11h4"/></>,heart:<path d="M20.8 5.5a5.1 5.1 0 0 0-7.2 0L12 7.1l-1.6-1.6a5.1 5.1 0 1 0-7.2 7.2L12 21l8.8-8.3a5.1 5.1 0 0 0 0-7.2Z"/>};return <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{icons[name]}</svg>}
+function RibbonIcon({name}){const icons={leaf:<><path d="M20 4C12 4 6 9 6 17c8 0 14-5 14-13Z"/><path d="M6 17 20 4"/></>,badge:<><path d="m12 2 2.5 2.2 3.3-.1.7 3.2 2.5 2.2-1.5 2.9.7 3.2-3.1 1-1.5 2.9-3.2-.9-3.1 1-1.5-2.9-3.2-.9.7-3.2-1.5-2.9 2.5-2.2.7-3.2 3.3.1L12 2Z"/><path d="m8.8 12 2 2 4.4-4.4"/></>,truck:<><path d="M3 8h10v8H3zM13 11h4l3 3v2h-7zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM3 5h6M1 11h4"/></>,heart:<path d="M20.8 5.5a5.1 5.1 0 0 0-7.2 0L12 7.1l-1.6-1.6a5.1 5.1 0 1 0-7.2 7.2L12 21l8.8-8.3a5.1 5.1 0 0 0 0-7.2Z"/>};return <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{icons[name]}</svg>}
 
 const ribbonItems=[
- ['bowl','Authentic Taste','PURE & NATURAL'],
- ['leaf','Premium Quality','FARM FRESH'],
- ['truck','Delivering Happiness','Across India'],
- ['leaf','100% Natural','NO PRESERVATIVES'],
- ['heart','Healthy Snacking','A BETTER YOU']
+ ['leaf','Authentic Taste'],
+ ['badge','Premium Quality'],
+ ['truck','Delivering Happiness Across India'],
+ ['leaf','100% Natural'],
+ ['heart','Healthy Snacking']
 ]
 
 function BenefitsRibbon(){
- const track=ribbonItems.map(([icon,title,sub])=><div className="benefit-item" key={`${title}-${sub}`}><RibbonIcon name={icon}/><span><b>{title}</b><small>{sub}</small></span></div>)
+ const track=ribbonItems.map(([icon,title])=><div className="benefit-item" key={title}><RibbonIcon name={icon}/><b>{title}</b></div>)
  return <div className="benefits-ribbon" aria-label="Meena Green benefits">
   <div className="benefit-track">{track}</div>
   <div className="benefit-track" aria-hidden="true">{track}</div>
