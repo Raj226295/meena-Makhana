@@ -1,0 +1,21 @@
+.cards{gap:22px;align-items:stretch}
+.cards .product-card{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;background:transparent;border:1px solid #fff9e055;border-radius:24px;padding:64px 20px 18px;box-shadow:0 8px 22px #1639230b;text-align:left;scroll-margin-top:100px}
+.product-ribbon{position:absolute;top:23px;left:-38px;transform:rotate(-45deg);width:148px;background:linear-gradient(90deg,#d70714,#f32b22);color:white;text-align:center;font-size:11px;font-weight:800;letter-spacing:1px;padding:9px 0;z-index:2}
+.product-tools{position:absolute;right:14px;top:14px;display:flex;gap:8px;z-index:3}
+.cards .product-tools button{position:static;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid #1753331a;background:#fffdf8;color:#115c35;box-shadow:0 3px 10px #243e2810;padding:0;cursor:pointer;transition:transform .2s,background .2s}
+.cards .product-tools .heart.liked{color:#e2222b;background:#fffdf8}
+.product-tools button:hover{transform:translateY(-2px)}
+.cards .product-card>img,.bestsellers .cards .product-card>img{height:260px;width:100%;object-fit:contain;object-position:center;padding:12px 14px 20px;margin:0 0 12px;mix-blend-mode:normal}
+.product-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:61px;margin-bottom:14px}
+.cards .product-title-row h3{font:700 22px/1.2 Georgia,serif;margin:0;color:#09592f;min-height:0;display:block;text-align:left;overflow-wrap:anywhere}
+.quick-cart{flex:0 0 44px;height:44px;display:grid;place-items:center;background:transparent;color:#09592f;border:1px solid #365c333b;border-radius:13px;transition:background .2s,transform .2s}
+.quick-cart:hover{background:#fff9e94d;transform:translateY(-2px)}
+.product-weight{position:relative;margin-bottom:14px}.product-weight select{appearance:none;width:100%;height:46px;padding:0 36px 0 14px;background:transparent;border:1px solid #42603a52;border-radius:12px;color:#243b29;font:500 17px inherit;cursor:pointer}.product-weight svg{position:absolute;right:12px;top:14px;pointer-events:none}.product-weight option{background:#fff9ed}
+.cards .product-price{font-size:32px;line-height:1.1;font-weight:800;color:#086039;margin:0 0 7px}
+.cards .product-unit-price{font-size:14px;line-height:1.4;color:#4b6250;margin:0 0 20px}
+.buy-now{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:49px;margin-top:auto;padding:12px 8px;border:0;border-radius:14px;background:linear-gradient(105deg,#ff9609,#ff6b18);color:white;font-size:15px;font-weight:800;letter-spacing:.3px;box-shadow:0 7px 17px #ec741524;transition:transform .2s,box-shadow .2s}
+.buy-now:hover{transform:translateY(-2px);box-shadow:0 9px 20px #ec74153d}.buy-now:active{transform:scale(.97)}
+.product-feedback{font-size:11px;line-height:1.4;color:#164d2d;overflow-wrap:anywhere}.product-feedback:not(:empty){padding-top:10px}
+@media(max-width:1050px){.cards{grid-template-columns:repeat(2,minmax(0,1fr));max-width:800px}.cards .product-card>img,.bestsellers .cards .product-card>img{height:280px}}
+@media(max-width:500px){.cards{gap:12px}.cards .product-card{padding:58px 12px 14px;border-radius:18px}.cards .product-card>img,.bestsellers .cards .product-card>img{height:190px;padding:8px 3px 12px;margin-bottom:5px}.product-tools{top:10px;right:8px;gap:5px}.cards .product-tools button{width:34px;height:34px}.product-ribbon{font-size:8px;width:115px;left:-34px;top:18px;padding:6px 0}.product-title-row{min-height:62px;gap:4px;margin-bottom:10px}.cards .product-title-row h3{font-size:17px}.quick-cart{flex-basis:34px;height:36px;border-radius:10px}.quick-cart svg{width:20px}.product-weight select{height:42px;font-size:15px;padding-left:10px}.product-weight svg{top:12px}.cards .product-price{font-size:27px}.cards .product-unit-price{font-size:12px;margin-bottom:14px}.buy-now{font-size:12px;min-height:44px;gap:6px;border-radius:12px}.buy-now svg{width:18px}}
+@media(prefers-reduced-motion:reduce){.product-tools button,.quick-cart,.buy-now{transition:none;transform:none!important}}

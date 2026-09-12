@@ -12,3 +12,50 @@ main{background:transparent}
 .heritage{min-height:270px;padding:30px 7%;display:grid;grid-template-columns:1fr 320px 1fr;align-items:center;gap:28px;color:#fff6d3;background:linear-gradient(90deg,rgba(1,77,44,.96),rgba(22,112,53,.75)),url('/homepage-nature-master.png') center bottom/cover}.heritage div{max-width:420px}.heritage div>span{font-size:54px;color:#e9c64f}.heritage h2{font-family:Georgia,serif;font-size:28px;margin:4px 0}.heritage p{line-height:1.5}.heritage img{height:225px;max-width:100%;object-fit:contain;filter:drop-shadow(0 12px 12px #001c13aa)}.heritage blockquote{font-family:Georgia,serif;font-size:27px;font-style:italic;color:#164a2e;background:#fff1cf;padding:25px;transform:rotate(-3deg);text-align:center}
 @media(max-width:780px){.brand-intro{padding-top:22px}.brand-intro h1{font-size:28px}.brand-intro>p br{display:none}.heritage{grid-template-columns:1fr 130px;padding:24px 18px}.heritage img{height:150px}.heritage blockquote{grid-column:1/-1;font-size:20px;margin:0}.banner-track img{object-position:center}}
 @media(max-width:480px){.heritage{grid-template-columns:1fr 105px}.heritage h2{font-size:21px}.heritage p{font-size:13px}.brand-intro .quality-strip{grid-template-columns:1fr 1fr}}
+/* Reference composition: compact white navigation, full artwork, botanical intro. */
+body{background:#fff9e9!important}
+.promise-bar{height:clamp(18px,3.3vw,32px);background:#d90000}
+.ribbon-track{width:100%;animation:none}
+.ribbon-track>div{width:100%;gap:0;padding:0 6%;justify-content:flex-start}
+.ribbon-track>div+div{display:none}
+.ribbon-track span{display:inline!important;font-size:clamp(6px,1.05vw,11px);letter-spacing:0;white-space:nowrap}
+.ribbon-track span+span:before{content:' | ';white-space:pre}
+.ribbon-track span:last-child{margin-left:auto}
+.ribbon-track span:last-child:before{content:''}
+.nav-wrap{padding:0;background:white;position:sticky}
+.site-header{height:clamp(44px,7.9vw,86px);padding:3px 6%;grid-template-columns:16% 21% 1fr 16%;gap:0;border-radius:0}
+.site-header .logo{height:100%;padding:0;border:0}
+.site-header .logo img{width:90%;height:100%;object-fit:contain}
+.delivery{gap:5px;padding:0}
+.delivery>svg{width:clamp(13px,2.4vw,24px);height:clamp(13px,2.4vw,24px)}
+.delivery p{font-size:clamp(7px,1.15vw,12px)}
+.delivery strong{font-size:clamp(7px,1.25vw,13px);display:flex}
+.delivery strong svg{width:10px}
+.site-header nav{display:flex;position:static;gap:clamp(8px,2vw,24px);padding:0;box-shadow:none;justify-content:flex-start}
+.site-header nav a{padding:8px 0;font-size:clamp(7px,1.25vw,14px)}
+.site-header nav a .ui-icon{display:none}
+.site-header nav a:after{display:none}
+.site-header nav a.active:after{display:block;left:0;right:0;bottom:3px;height:2px}
+.actions{padding:0;gap:clamp(4px,1.2vw,14px);border:0}
+.actions button,.actions button:nth-child(2),.actions button:first-child{display:grid;width:clamp(18px,3vw,34px);height:clamp(20px,3vw,34px)}
+.actions button .ui-icon{width:clamp(12px,2vw,23px);height:clamp(12px,2vw,23px)}
+.actions i{font-size:7px;padding:1px 3px;top:0;right:-2px}
+.menu{display:none}
+.reference-hero{position:relative;scroll-margin-top:90px;line-height:0}
+.reference-hero>img{display:block;width:100%;height:auto}
+.hero-shop-link{position:absolute;left:17.6%;top:73%;width:18.7%;height:7.2%;border-radius:30px}
+.hero-shop-link:hover{background:#ffffff16;box-shadow:0 0 0 2px #e3c85c}
+.brand-intro{padding:0 10% 3.6%;background:#fff8e5 url('/homepage-nature-master.png') center 28.5%/100% auto no-repeat;margin-top:-1px}
+.brand-intro:before{display:none}
+.brand-leaf{font-size:clamp(28px,5vw,54px);line-height:.95;position:relative}
+.brand-intro h1{font-size:clamp(19px,3vw,36px);line-height:1.1;letter-spacing:.5px}
+.brand-intro h3{font-size:clamp(9px,1.5vw,17px);letter-spacing:.5px;margin:3px 0 12px;font-weight:500}
+.brand-intro>p{font-size:clamp(8px,1.2vw,14px);line-height:1.45;color:#243c2a;max-width:950px}
+.brand-intro .quality-strip{grid-template-columns:repeat(4,1fr);padding:0 8%;margin:16px 0 0;gap:12px;backdrop-filter:none}
+.quality-strip>div{flex-direction:column;gap:4px;font-size:clamp(25px,4vw,42px);line-height:1;color:#07552e}
+.quality-strip span{font-size:clamp(8px,1.3vw,14px);line-height:1.2;max-width:90px}
+.quality-strip small{display:none}
+.products{margin:0;border-radius:0;padding-top:24px;background:linear-gradient(#9dceab,#def0bd);position:relative;box-shadow:none}
+.products:before{content:'';position:absolute;top:-14px;left:0;width:100%;height:20px;background:#9dceab;clip-path:polygon(0 75%,15% 20%,30% 0,52% 65%,75% 20%,90% 10%,100% 65%,100% 100%,0 100%)}
+#products,#about,#contact{scroll-margin-top:90px}
+@media(max-width:480px){.site-header{padding:3px 4%;grid-template-columns:16% 22% 1fr 15%}.site-header nav{gap:8px}.brand-intro{padding-left:7%;padding-right:7%}.brand-intro h3{margin-bottom:8px}.brand-intro .quality-strip{margin-top:12px;padding:0 4%;gap:8px}.ribbon-track>div{padding:0 4%}.ribbon-track span:last-child{display:none!important}}

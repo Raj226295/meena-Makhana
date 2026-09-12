@@ -1,0 +1,42 @@
+/* Reference navbar: airy white surface, fine dividers and soft green controls. */
+.nav-wrap{background:#fff;border-bottom:1px solid #eef1e9;box-shadow:0 3px 14px #123c2407;backdrop-filter:none}
+.nav-wrap .site-header{max-width:1600px;height:100px;padding:14px 3%;grid-template-columns:145px minmax(200px,245px) minmax(340px,1fr) 180px;gap:24px}
+.nav-wrap .site-header .logo{position:relative;height:68px;padding-right:24px}
+.nav-wrap .site-header .logo:after{content:'';position:absolute;right:0;top:12px;bottom:12px;width:1px;background:#cdd3c9}
+.nav-wrap .site-header .logo img{width:120px;height:68px;max-height:68px}
+.nav-wrap .delivery-control .delivery{gap:12px;padding:6px 0;background:transparent}
+.nav-wrap .delivery-control .delivery:hover{background:transparent}
+.nav-wrap .delivery-control .delivery>svg{width:26px;height:26px;flex-basis:26px;color:#12602f}
+.nav-wrap .delivery-summary small{font-size:13px;line-height:1.5;color:#777e76}
+.nav-wrap .delivery-control .delivery strong{font-size:15px;font-weight:700;color:#115a2d}
+.delivery-chevron{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:#effae8;color:#0c592b;transition:background .2s}
+.delivery-chevron svg{transition:transform .22s}.delivery[aria-expanded=true] .delivery-chevron svg{transform:rotate(180deg)}
+.nav-wrap .site-header nav{gap:14px;justify-content:center}
+.nav-wrap .site-header nav a{font-size:16px;font-weight:500;padding:14px 19px;min-height:50px;line-height:22px;border-radius:17px;color:#134e27;letter-spacing:0}
+.nav-wrap .site-header nav a.active{font-weight:700;background:#eef9e8}
+.nav-wrap .site-header nav a:after,.nav-wrap .site-header nav a.active:after{height:3px;left:26px;right:26px;bottom:8px;background:#307d27;border-radius:3px}
+.nav-wrap .site-header .actions{border-left:1px solid #cdd3c9;padding-left:22px;width:180px;gap:12px}
+.nav-wrap .site-header .actions .nav-action-image{width:28px;height:28px}
+.nav-wrap .site-header .actions button:last-child .nav-action-image{width:31px;height:31px}
+.nav-wrap .site-header .actions button{padding:6px}
+.nav-wrap .site-header .actions i{top:-1px;right:-1px;min-width:19px;height:19px;font-size:10px}
+@media(min-width:761px) and (max-width:1150px){
+ .nav-wrap .site-header{height:88px;padding:10px 18px;grid-template-columns:105px minmax(150px,180px) minmax(280px,1fr) 144px;gap:12px}
+ .nav-wrap .site-header .logo{padding-right:14px}.nav-wrap .site-header .logo img{width:90px;height:58px}
+ .nav-wrap .delivery-control .delivery{gap:7px}.nav-wrap .delivery-summary small{font-size:11px}.nav-wrap .delivery-control .delivery strong{font-size:12px}.delivery-chevron{width:30px;height:30px;flex-basis:30px}
+ .nav-wrap .site-header nav{gap:2px}.nav-wrap .site-header nav a{font-size:14px;padding:12px 11px}
+ .nav-wrap .site-header .actions{width:144px;padding-left:11px;gap:0}.nav-wrap .site-header .actions .nav-action-image{width:24px;height:24px}.nav-wrap .site-header .actions button:last-child .nav-action-image{width:27px;height:27px}
+}
+@media(max-width:760px){
+ .nav-wrap .site-header{height:78px;padding:8px 12px;grid-template-columns:78px minmax(0,1fr) 40px 132px;gap:6px}
+ .nav-wrap .site-header .logo{height:58px;padding:0}.nav-wrap .site-header .logo img{width:74px;height:54px}.nav-wrap .site-header .logo:after{display:none}
+ .nav-wrap .delivery-control .delivery{gap:5px}.nav-wrap .delivery-control .delivery>svg{width:18px;height:18px;flex-basis:18px}.nav-wrap .delivery-summary small{font-size:10px}.nav-wrap .delivery-control .delivery strong{font-size:11px}.delivery-chevron{width:26px;height:26px;flex-basis:26px}.delivery-chevron svg{width:14px}
+ .nav-wrap .site-header .actions{width:132px;border:0;padding:0;gap:0}.nav-wrap .site-header .actions .nav-action-image{width:24px;height:24px}.nav-wrap .site-header .actions button:last-child .nav-action-image{width:27px;height:27px}
+ .nav-wrap .site-header nav{gap:5px;align-items:stretch}.nav-wrap .site-header nav a{font-size:14px;padding:12px 16px;min-height:44px;border-radius:10px}
+}
+@media(max-width:420px){
+ .nav-wrap .site-header{height:auto;min-height:106px;grid-template-columns:76px 1fr 40px 132px;gap:2px 4px}
+ .nav-wrap .site-header .logo{height:52px}.nav-wrap .site-header .logo img{height:50px}
+ .nav-wrap .delivery-control .delivery{padding:4px 0;min-height:34px;gap:7px}.nav-wrap .delivery-control .delivery strong{font-size:12px}.delivery-chevron{margin-left:auto;width:26px;height:26px;flex-basis:26px}
+}
+@media(prefers-reduced-motion:reduce){.delivery-chevron,.delivery-chevron svg{transition:none}}
