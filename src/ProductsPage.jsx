@@ -1,12 +1,13 @@
 import {useMemo,useState} from 'react'
 import Footer from './Footer'
+import StoreNavbar from './StoreNavbar'
 import './ProductsPage.css'
 
 function saved(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function Icon({name,size=20}){const paths={search:'m21 21-4.3-4.3M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.5 10.5l7-4M8.5 13.5l7 4',cart:'M3 4h2l2 10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l2-7H6m4 13h.01M17 20h.01',grid:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',list:'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01'};return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]}/></svg>}
 
 export default function ProductsPage({products}){
- const [query,setQuery]=useState(''),[sort,setSort]=useState('popular'),[mode,setMode]=useState('retail'),[view,setView]=useState('grid')
+ const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('search')||''),[sort,setSort]=useState('popular'),[mode,setMode]=useState('retail'),[view,setView]=useState('grid')
  const [quantities,setQuantities]=useState({})
  const [liked,setLiked]=useState(()=>saved('meena-wishlist',[])),[cart,setCart]=useState(()=>saved('meena-cart',{})),[notice,setNotice]=useState('')
  const updateLiked=name=>setLiked(items=>{const next=items.includes(name)?items.filter(x=>x!==name):[...items,name];localStorage.setItem('meena-wishlist',JSON.stringify(next));return next})
@@ -18,8 +19,7 @@ export default function ProductsPage({products}){
  },[products,query,sort])
  const share=async p=>{try{await navigator.clipboard.writeText(`${location.origin}/products#${p.name.toLowerCase().replaceAll(' ','-')}`);setNotice('Product link copied')}catch{setNotice('Could not copy the product link')}}
  return <div className="catalog-page">
-  <div className="catalog-promise"><span>♡ 100% Natural</span><span>✦ From Our Farms</span><span>♧ No Added Preservatives</span><span>▣ Pan India Delivery</span><span>♡ Healthy Snacking</span></div>
-  <header className="catalog-header"><a href="/" className="catalog-logo"><img src="/meena-logo-premium.png" alt="Meena Green"/></a><nav aria-label="Main navigation"><a href="/">Home</a><a className="active" href="/products" aria-current="page">Products</a><a href="/#about">About Us</a><a href="/#contact">Contact</a></nav><label className="catalog-search"><Icon name="search"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search products..." aria-label="Search products"/></label><div className="catalog-actions"><a href="/" aria-label="Profile"><img src="/nav-profile.png" alt=""/></a><button aria-label={`Wishlist ${liked.length}`}><img src="/nav-wishlist-outline.png" alt=""/><i>{liked.length}</i></button><button aria-label={`Cart ${count}`}><img src="/nav-cart.png" alt=""/><i>{count}</i></button></div></header>
+  <StoreNavbar active="products" query={query} onQueryChange={setQuery} wishlistCount={liked.length} cartCount={count}/>
   <main className="catalog-main">
    <section className="catalog-toolbar" aria-label="Product filters"><button className="filter-label">☰ <span>FILTER BY</span></button><label>All Products <select aria-label="Product category"><option>All Products</option><option>Plain Makhana</option><option>Premium Makhana</option></select></label><label>Size <select aria-label="Size"><option>250g</option></select></label><label>Price <select aria-label="Price range"><option>All prices</option><option>Under ₹180</option><option>₹180–₹200</option></select></label><fieldset><legend>Buying mode</legend><label><input type="radio" checked={mode==='retail'} onChange={()=>setMode('retail')}/> Retail</label><label><input type="radio" checked={mode==='wholesale'} onChange={()=>setMode('wholesale')}/> Wholesale</label></fieldset><label className="sort-control">Sort by <select value={sort} onChange={e=>setSort(e.target.value)}><option value="popular">Popular</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label><div className="view-buttons"><button className={view==='grid'?'active':''} onClick={()=>setView('grid')} aria-label="Grid view"><Icon name="grid"/></button><button className={view==='list'?'active':''} onClick={()=>setView('list')} aria-label="List view"><Icon name="list"/></button></div></section>
    <p className="catalog-count">Showing {shown.length} products</p>

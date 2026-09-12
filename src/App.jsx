@@ -1,6 +1,6 @@
 import Footer from './Footer'
-import DeliveryLocation from './DeliveryLocation'
 import ProductsPage from './ProductsPage'
+import StoreNavbar from './StoreNavbar'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import './Nav.css'
@@ -22,8 +22,6 @@ const products = [
 const filters=['All Products','Plain Makhana','Roasted Makhana','Flavoured Makhana','Gift Packs']
 const iconPaths={share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.6 10.5l6.8-4M8.6 13.5l6.8 4',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',home:'M3 11.5 12 4l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',pin:'M12 22s7-6 7-13A7 7 0 0 0 5 9c0 7 7 13 7 13Zm0-10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z',search:'m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z',user:'M20 21a8 8 0 0 0-16 0m12-13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',cart:'M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6m4 13h.01M17 20h.01',menu:'M4 7h16M4 12h16M4 17h16',chevron:'m8 10 4 4 4-4'}
 function Icon({name,size=24}){return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill={name==='home'?'currentColor':'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={iconPaths[name]}/></svg>}
-const ribbonText=<><span>🌿 100% Pure Makhana</span><span>Farm Fresh</span><span>No Preservatives</span><span>A Healthy Snack for Every Home</span><span>🚚 Deliver to Purnea, Bihar</span></>
-
 function TrustIcon({name}){
  return <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
  {name==='natural'&&<><path d="M23 39C9 37 5 27 6 17c12 0 20 7 17 22ZM25 35C23 20 32 12 43 10c1 15-5 24-18 25Z" fill="currentColor" stroke="none"/><path d="M23 42V32m1 1 11-14M21 33 12 24" stroke="#1a6643" strokeWidth="2"/></>}
@@ -57,7 +55,7 @@ function ProductCard({product,liked,onLike,onAdd,section}){
 function readSaved(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function App(){
  const isProductsPage=window.location.pathname.replace(/\/+$/,'')==='/products'
- const [filter,setFilter]=useState('All Products'),[cartItems,setCartItems]=useState(()=>readSaved('meena-cart',{})),[liked,setLiked]=useState(()=>readSaved('meena-wishlist',[])),[menu,setMenu]=useState(false)
+ const [filter,setFilter]=useState('All Products'),[cartItems,setCartItems]=useState(()=>readSaved('meena-cart',{})),[liked,setLiked]=useState(()=>readSaved('meena-wishlist',[]))
  const [panel,setPanel]=useState(null)
  const [profile,setProfile]=useState(()=>readSaved('meena-profile',{name:'',email:''}))
  const [profileSaved,setProfileSaved]=useState(false)
@@ -76,7 +74,6 @@ function App(){
   return()=>dialog.close()
  },[panel])
  const [activeSection,setActiveSection]=useState('home')
- const menuButton=useRef(null)
  useEffect(()=>{
   let frame=0
   const update=()=>{
@@ -87,18 +84,15 @@ function App(){
     setActiveSection(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4?'contact':current||'home')
    })
   }
-  const escape=e=>{if(e.key==='Escape'){setMenu(false)}}
-  update()
-  window.addEventListener('scroll',update,{passive:true})
-  window.addEventListener('keydown',escape)
-  return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',update);window.removeEventListener('keydown',escape)}
+   update()
+   window.addEventListener('scroll',update,{passive:true})
+   return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',update)}
  },[])
  const shown=useMemo(()=>products.filter(p=>(filter==='All Products'||filter==='Plain Makhana'||p.type===filter)),[filter])
  const toggle=(name)=>setLiked(x=>x.includes(name)?x.filter(v=>v!==name):[...x,name])
  if(isProductsPage)return <ProductsPage products={products}/>
  return <>
-  <div className="promise-bar" aria-label="Store benefits"><div className="ribbon-track"><div>{ribbonText}</div><div aria-hidden="true">{ribbonText}</div></div></div>
-  <div className="nav-wrap"><header className="site-header"><a className="logo" href="#home"><img src="/meena-logo-premium.png" alt="Meena Green"/></a><DeliveryLocation/><button ref={menuButton} className={'menu '+(menu?'is-open':'')} onClick={()=>setMenu(!menu)} aria-label={menu?'Close menu':'Open menu'} aria-expanded={menu} aria-controls="main-navigation"><span/><span/><span/></button><nav id="main-navigation" aria-label="Main navigation" className={menu?'open':''}><a href="#home" className={activeSection==='home'?'active':''}>Home</a><a href="/products">Products</a><a href="#about" className={activeSection==='about'?'active':''}>About Us</a><a href="#contact" className={activeSection==='contact'?'active':''}>Contact</a></nav><div className="actions"><button aria-label={'Wishlist '+liked.length} onClick={e=>openPanel('wishlist',e)}><img className="nav-action-image" src="/nav-wishlist-outline.png" alt="" width="22" height="22"/>{liked.length>0&&<i>{liked.length}</i>}</button><button aria-label="Account" onClick={e=>openPanel('profile',e)}><img className="nav-action-image" src="/nav-profile.png" alt="" width="22" height="22"/></button><button aria-label={'Cart '+cart} onClick={e=>openPanel('cart',e)}><img className="nav-action-image" src="/nav-cart.png" alt="" width="24" height="24"/><i>{cart}</i></button></div></header></div>
+  <StoreNavbar active={activeSection} wishlistCount={liked.length} cartCount={cart} onProfile={e=>openPanel('profile',e)} onWishlist={e=>openPanel('wishlist',e)} onCart={e=>openPanel('cart',e)}/>
   {panel&&<dialog ref={panelRef} className="shop-dialog" aria-labelledby="shop-panel-title" onCancel={e=>{e.preventDefault();closePanel()}} onClick={e=>{if(e.target===e.currentTarget)closePanel()}}><div className="shop-panel"><header><h2 id="shop-panel-title">{panel==='cart'?'Your Cart':panel==='wishlist'?'Your Wishlist':'Your Profile'}</h2><button onClick={closePanel} aria-label="Close panel">✕</button></header>
   {panel==='profile'?<form onSubmit={e=>{e.preventDefault();localStorage.setItem('meena-profile',JSON.stringify(profile));setProfileSaved(true)}}><p>Save your details on this device for your next visit.</p><label>Name<input autoComplete="name" value={profile.name} required onChange={e=>{setProfile({...profile,name:e.target.value});setProfileSaved(false)}}/></label><label>Email<input type="email" autoComplete="email" value={profile.email} required onChange={e=>{setProfile({...profile,email:e.target.value});setProfileSaved(false)}}/></label><button className="panel-primary" type="submit">Save Profile</button><p role="status">{profileSaved?'Profile saved on this device.':''}</p></form>:<>
   <div className="panel-products">{products.filter(p=>panel==='cart'?cartItems[p.name]>0:liked.includes(p.name)).map(p=><article key={p.name}><img src={p.image} alt={p.name}/><div><h3>{p.name}</h3><p>250g · ₹{p.price}</p>{panel==='cart'?<div className="quantity"><button aria-label={'Decrease '+p.name} onClick={()=>changeQuantity(p.name,-1)}>−</button><span aria-live="polite">{cartItems[p.name]}</span><button aria-label={'Increase '+p.name} onClick={()=>changeQuantity(p.name,1)}>+</button></div>:<button className="panel-primary" onClick={()=>addToCart(p.name)}>Add to Cart{cartItems[p.name]?` (${cartItems[p.name]})`:''}</button>}</div><button className="remove-item" aria-label={'Remove '+p.name} onClick={()=>panel==='cart'?setCartItems(items=>{const next={...items};delete next[p.name];return next}):toggle(p.name)}>✕</button></article>)}</div>
