@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+import './Nav.css'
 
 const products = [
   { name:'Meena Premium', type:'Plain Makhana', price:180, image:'/premium-yellow-new.png' },
@@ -14,6 +15,10 @@ const banners=[
  {src:'/banner-superfood.png',alt:'Premium Makhana — nature’s superfood'},
 ]
 
+const iconPaths={home:'M3 11.5 12 4l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',pin:'M12 22s7-6 7-13A7 7 0 0 0 5 9c0 7 7 13 7 13Zm0-10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z',search:'m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z',user:'M20 21a8 8 0 0 0-16 0m12-13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',cart:'M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6m4 13h.01M17 20h.01',menu:'M4 7h16M4 12h16M4 17h16',chevron:'m8 10 4 4 4-4'}
+function Icon({name,size=24}){return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill={name==='home'?'currentColor':'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={iconPaths[name]}/></svg>}
+const ribbonText=<><span>🌿 100% Natural</span><span>⊘ No Preservatives</span><span>⚡ Rich in Nutrition</span><span>🤝 Trusted by Families</span><span>🚚 Free Shipping Above ₹499</span></>
+
 function App(){
  const [filter,setFilter]=useState('All Products'),[cart,setCart]=useState(0),[liked,setLiked]=useState([]),[menu,setMenu]=useState(false),[slide,setSlide]=useState(0),[paused,setPaused]=useState(false)
  const shown=useMemo(()=>filter==='All Products'||filter==='Plain Makhana'?products:products.filter(p=>p.type===filter),[filter])
@@ -21,8 +26,8 @@ function App(){
  useEffect(()=>{if(paused)return;const timer=setInterval(()=>setSlide(s=>(s+1)%banners.length),5000);return()=>clearInterval(timer)},[paused])
  const moveSlide=(direction)=>setSlide(s=>(s+direction+banners.length)%banners.length)
  return <>
-  <div className="promise-bar"><span>🌿 100% Natural　|　⊘ No Preservatives　|　⚡ Rich in Nutrition　|　🤝 Trusted by Families</span><b>🚚 Free Shipping on Orders Above ₹499</b></div>
-  <div className="nav-wrap"><header className="site-header"><a className="logo" href="#home"><img src="/meena-logo-premium.png" alt="Meena Green"/></a><div className="delivery"><span>●</span><p>Deliver to<strong>Purnea, Bihar　⌄</strong></p></div><button className="menu" onClick={()=>setMenu(!menu)} aria-label="Toggle menu">☰</button><nav className={menu?'open':''}><a className="active" href="#home"><span>⌂</span> Home</a><a href="#products">Products　⌄</a><a href="#about">About Us</a><a href="#contact">Contact</a></nav><div className="actions"><button aria-label="Search">⌕</button><button aria-label="Account">♙</button><button aria-label={'Cart '+cart}>🛒<i>{cart}</i></button></div></header></div>
+  <div className="promise-bar" aria-label="Store benefits"><div className="ribbon-track"><div>{ribbonText}</div><div aria-hidden="true">{ribbonText}</div></div></div>
+  <div className="nav-wrap"><header className="site-header"><a className="logo" href="#home"><img src="/meena-logo-premium.png" alt="Meena Green"/></a><button className="delivery" aria-label="Change delivery location"><Icon name="pin"/><p>Deliver to<strong>Purnea, Bihar <Icon name="chevron" size={16}/></strong></p></button><button className="menu" onClick={()=>setMenu(!menu)} aria-label="Toggle menu"><Icon name="menu"/></button><nav className={menu?'open':''}><a className="active" href="#home"><Icon name="home"/> Home</a><a href="#products">Products <Icon name="chevron" size={16}/></a><a href="#about">About Us</a><a href="#contact">Contact</a></nav><div className="actions"><button aria-label="Search"><Icon name="search"/></button><button aria-label="Account"><Icon name="user"/></button><button aria-label={'Cart '+cart}><Icon name="cart"/><i>{cart}</i></button></div></header></div>
   <main>
    <section className="banner-carousel" id="home" aria-label="Featured offers" onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)} onFocus={()=>setPaused(true)} onBlur={()=>setPaused(false)}><div className="banner-track" style={{transform:`translateX(-${slide*100}%)`}}>{banners.map((banner,index)=><img key={banner.src} src={banner.src} alt={banner.alt} aria-hidden={slide!==index}/>)}</div><button className="banner-arrow prev" onClick={()=>moveSlide(-1)} aria-label="Previous banner">‹</button><button className="banner-arrow next" onClick={()=>moveSlide(1)} aria-label="Next banner">›</button><div className="banner-dots">{banners.map((_,index)=><button key={index} className={slide===index?'active':''} onClick={()=>setSlide(index)} aria-label={`Show banner ${index+1}`} aria-current={slide===index?'true':undefined}/>)}</div></section>
    <section className="quality-strip"><div>🌿 <span><b>Premium Quality</b><small>Carefully selected</small></span></div><div>🌱 <span><b>Hygienically Packed</b><small>Freshness sealed</small></span></div><div>♨ <span><b>Farm Fresh Goodness</b><small>From Bihar farms</small></span></div><div>♡ <span><b>A Healthier You Always</b><small>Wholesome everyday</small></span></div></section>

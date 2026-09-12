@@ -1,0 +1,17 @@
+.ui-icon{display:block;flex:0 0 auto}
+.promise-bar{height:34px;padding:0;overflow:hidden;white-space:nowrap;display:block}
+.ribbon-track{display:flex;width:max-content;height:100%;animation:ribbon-scroll 28s linear infinite}
+.ribbon-track>div{display:flex;align-items:center;gap:46px;padding-right:46px;height:100%}
+.ribbon-track span{font-size:12px;font-weight:700;letter-spacing:.2px}
+.promise-bar:hover .ribbon-track{animation-play-state:paused}
+@keyframes ribbon-scroll{to{transform:translateX(-50%)}}
+.delivery{border:0;background:transparent;text-align:left}
+.delivery>svg{color:#08723d;width:30px;height:30px}
+.delivery strong{display:flex;align-items:center;gap:3px}
+.site-header nav a{display:flex;align-items:center;justify-content:center;gap:5px}
+.site-header nav a .ui-icon{width:20px;height:20px}
+.actions button{padding:0}
+.actions button .ui-icon{width:25px;height:25px}
+.menu{align-items:center;justify-content:center}
+@media(prefers-reduced-motion:reduce){.ribbon-track{animation:none}}
+@media(max-width:780px){.ribbon-track>div{gap:30px;padding-right:30px}.promise-bar{height:30px}.delivery>svg{width:23px;height:23px}.actions button .ui-icon{width:21px;height:21px}}
