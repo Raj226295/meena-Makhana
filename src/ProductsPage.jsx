@@ -6,17 +6,25 @@ import './ProductsPage.css'
 function saved(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function Icon({name,size=20}){const paths={search:'m21 21-4.3-4.3M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.5 10.5l7-4M8.5 13.5l7 4',cart:'M3 4h2l2 10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l2-7H6m4 13h.01M17 20h.01',grid:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',list:'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',sliders:'M4 7h10M18 7h2M4 17h2M10 17h10M7 14v6M17 4v6',bag:'M6 8h12l-1 12H7L6 8Zm3 0a3 3 0 0 1 6 0',ruler:'M7 3h10v18H7V3Zm4 4h6m-3 4h3m-6 4h6',rupee:'M7 5h10M7 9h10M7 5c5 0 7 1.5 7 4s-2 4-7 4l8 6',trend:'m4 16 6-6 4 4 6-8M16 6h4v4'};return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]}/></svg>}
 
+const additionalProducts=[
+ {name:'Meena Classic',type:'Plain Makhana',price:155,image:'/makhana-classic-red.jpg'},
+ {name:'Premium Select',type:'Premium Makhana',price:210,image:'/makhana-premium-yellow.png'},
+ {name:'Perfect Gold',type:'Premium Makhana',price:195,image:'/makhana-perfect-yellow.png'},
+ {name:'Perfect Purple',type:'Roasted Makhana',price:205,image:'/makhana-perfect-purple.png'},
+]
+
 export default function ProductsPage({products}){
- const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('search')||''),[sort,setSort]=useState('popular'),[mode,setMode]=useState('retail'),[view,setView]=useState('grid')
+ const [query,setQuery]=useState(()=>new URLSearchParams(location.search).get('search')||''),[category,setCategory]=useState('All Products'),[sort,setSort]=useState('popular'),[mode,setMode]=useState('retail'),[view,setView]=useState('grid')
  const [quantities,setQuantities]=useState({})
  const [liked,setLiked]=useState(()=>saved('meena-wishlist',[])),[cart,setCart]=useState(()=>saved('meena-cart',{})),[notice,setNotice]=useState('')
  const updateLiked=name=>setLiked(items=>{const next=items.includes(name)?items.filter(x=>x!==name):[...items,name];localStorage.setItem('meena-wishlist',JSON.stringify(next));return next})
  const add=(name,quantity=1)=>setCart(items=>{const next={...items,[name]:(items[name]||0)+quantity};localStorage.setItem('meena-cart',JSON.stringify(next));setNotice(`${name} added to cart`);return next})
  const count=Object.values(cart).reduce((sum,n)=>sum+n,0)
+ const allProducts=useMemo(()=>[...products,...additionalProducts],[products])
  const shown=useMemo(()=>{
-  const filtered=products.filter(p=>(p.name+' '+p.type).toLowerCase().includes(query.toLowerCase()))
+  const filtered=allProducts.filter(p=>(category==='All Products'||p.name===category)&&(p.name+' '+p.type).toLowerCase().includes(query.toLowerCase()))
   return [...filtered].sort((a,b)=>sort==='price-low'?a.price-b.price:sort==='price-high'?b.price-a.price:a.name.localeCompare(b.name))
- },[products,query,sort])
+ },[allProducts,category,query,sort])
  const share=async p=>{try{await navigator.clipboard.writeText(`${location.origin}/products#${p.name.toLowerCase().replaceAll(' ','-')}`);setNotice('Product link copied')}catch{setNotice('Could not copy the product link')}}
  return <div className="catalog-page">
   <StoreNavbar active="products" query={query} onQueryChange={setQuery} wishlistCount={liked.length} cartCount={count}/>
@@ -24,7 +32,7 @@ export default function ProductsPage({products}){
    <section className="catalog-toolbar" aria-label="Product filters">
     <div className="filter-heading"><span><Icon name="sliders" size={19}/></span><b>FILTER BY</b></div>
     <div className="filter-group">
-     <label className="filter-control"><Icon name="bag" size={18}/><select aria-label="Product category"><option>All Products</option><option>Plain Makhana</option><option>Premium Makhana</option></select></label>
+     <label className="filter-control"><Icon name="bag" size={18}/><select aria-label="Select product" value={category} onChange={e=>setCategory(e.target.value)}><option>All Products</option><option>Meena Premium</option><option>Perfect Premium</option><option>Perfect-2</option><option>Sandesh Organic</option></select></label>
      <label className="filter-control size-filter"><Icon name="ruler" size={18}/><select aria-label="Size"><option>Size</option><option>250g</option><option>500g</option><option>1 KG</option></select></label>
      <label className="filter-control price-filter"><Icon name="rupee" size={18}/><select aria-label="Price range"><option>Price</option><option>Under ₹180</option><option>₹180–₹200</option><option>Above ₹200</option></select></label>
     </div>

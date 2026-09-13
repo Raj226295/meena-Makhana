@@ -1,6 +1,10 @@
 import Footer from './Footer'
 import ProductsPage from './ProductsPage'
 import StoreNavbar from './StoreNavbar'
+import LoginPage from './LoginPage'
+import SignupPage from './SignupPage'
+import ContactPage from './ContactPage'
+import AboutPage from './AboutPage'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import './Nav.css'
@@ -54,7 +58,13 @@ function ProductCard({product,liked,onLike,onAdd,section}){
 
 function readSaved(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function App(){
- const isProductsPage=window.location.pathname.replace(/\/+$/,'')==='/products'
+ const [path,setPath]=useState(window.location.pathname)
+ const cleanPath=path.replace(/\/+$/,'')
+ const isProductsPage=cleanPath==='/products'
+ const isLoginPage=cleanPath==='/login'
+ const isSignupPage=cleanPath==='/signup'
+ const isContactPage=cleanPath==='/contact'
+ const isAboutPage=cleanPath==='/about'
  const [filter,setFilter]=useState('All Products'),[cartItems,setCartItems]=useState(()=>readSaved('meena-cart',{})),[liked,setLiked]=useState(()=>readSaved('meena-wishlist',[]))
  const [panel,setPanel]=useState(null)
  const [profile,setProfile]=useState(()=>readSaved('meena-profile',{name:'',email:''}))
@@ -68,6 +78,19 @@ function App(){
  const changeQuantity=(name,delta)=>setCartItems(items=>{const next={...items};next[name]=Math.max(0,(next[name]||0)+delta);if(!next[name])delete next[name];return next})
  useEffect(()=>{localStorage.setItem('meena-cart',JSON.stringify(cartItems))},[cartItems])
  useEffect(()=>{localStorage.setItem('meena-wishlist',JSON.stringify(liked))},[liked])
+ useEffect(()=>{
+  const updatePath=()=>setPath(window.location.pathname)
+  const navigate=e=>{
+   const link=e.target.closest?.('a[href]')
+   if(!link||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||link.target)return
+   const url=new URL(link.href,window.location.href)
+   if(url.origin!==window.location.origin)return
+   e.preventDefault();history.pushState({},'',url);setPath(url.pathname)
+   requestAnimationFrame(()=>url.hash?document.querySelector(url.hash)?.scrollIntoView({behavior:'smooth'}):window.scrollTo({top:0,behavior:'smooth'}))
+  }
+  window.addEventListener('popstate',updatePath);document.addEventListener('click',navigate)
+  return()=>{window.removeEventListener('popstate',updatePath);document.removeEventListener('click',navigate)}
+ },[])
  useEffect(()=>{
   if(!panel)return
   const dialog=panelRef.current;dialog.showModal()
@@ -90,9 +113,13 @@ function App(){
  },[])
  const shown=useMemo(()=>products.filter(p=>(filter==='All Products'||filter==='Plain Makhana'||p.type===filter)),[filter])
  const toggle=(name)=>setLiked(x=>x.includes(name)?x.filter(v=>v!==name):[...x,name])
+ if(isLoginPage)return <LoginPage/>
+ if(isSignupPage)return <><StoreNavbar/><SignupPage/></>
+ if(isContactPage)return <><StoreNavbar active="contact"/><ContactPage/><Footer/></>
+ if(isAboutPage)return <><StoreNavbar active="about"/><AboutPage/><Footer/></>
  if(isProductsPage)return <ProductsPage products={products}/>
  return <>
-  <StoreNavbar active={activeSection} wishlistCount={liked.length} cartCount={cart} onProfile={e=>openPanel('profile',e)} onWishlist={e=>openPanel('wishlist',e)} onCart={e=>openPanel('cart',e)}/>
+  <StoreNavbar active={activeSection} wishlistCount={liked.length} cartCount={cart} onProfile={()=>{history.pushState({},'','/login');window.dispatchEvent(new PopStateEvent('popstate'))}} onWishlist={e=>openPanel('wishlist',e)} onCart={e=>openPanel('cart',e)}/>
   {panel&&<dialog ref={panelRef} className="shop-dialog" aria-labelledby="shop-panel-title" onCancel={e=>{e.preventDefault();closePanel()}} onClick={e=>{if(e.target===e.currentTarget)closePanel()}}><div className="shop-panel"><header><h2 id="shop-panel-title">{panel==='cart'?'Your Cart':panel==='wishlist'?'Your Wishlist':'Your Profile'}</h2><button onClick={closePanel} aria-label="Close panel">✕</button></header>
   {panel==='profile'?<form onSubmit={e=>{e.preventDefault();localStorage.setItem('meena-profile',JSON.stringify(profile));setProfileSaved(true)}}><p>Save your details on this device for your next visit.</p><label>Name<input autoComplete="name" value={profile.name} required onChange={e=>{setProfile({...profile,name:e.target.value});setProfileSaved(false)}}/></label><label>Email<input type="email" autoComplete="email" value={profile.email} required onChange={e=>{setProfile({...profile,email:e.target.value});setProfileSaved(false)}}/></label><button className="panel-primary" type="submit">Save Profile</button><p role="status">{profileSaved?'Profile saved on this device.':''}</p></form>:<>
   <div className="panel-products">{products.filter(p=>panel==='cart'?cartItems[p.name]>0:liked.includes(p.name)).map(p=><article key={p.name}><img src={p.image} alt={p.name}/><div><h3>{p.name}</h3><p>250g · ₹{p.price}</p>{panel==='cart'?<div className="quantity"><button aria-label={'Decrease '+p.name} onClick={()=>changeQuantity(p.name,-1)}>−</button><span aria-live="polite">{cartItems[p.name]}</span><button aria-label={'Increase '+p.name} onClick={()=>changeQuantity(p.name,1)}>+</button></div>:<button className="panel-primary" onClick={()=>addToCart(p.name)}>Add to Cart{cartItems[p.name]?` (${cartItems[p.name]})`:''}</button>}</div><button className="remove-item" aria-label={'Remove '+p.name} onClick={()=>panel==='cart'?setCartItems(items=>{const next={...items};delete next[p.name];return next}):toggle(p.name)}>✕</button></article>)}</div>
