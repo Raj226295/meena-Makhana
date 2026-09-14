@@ -1,6 +1,7 @@
 import {useMemo,useState} from 'react'
 import StoreNavbar from './StoreNavbar'
 import './OrdersPage.css'
+import AccountSidebar from './AccountSidebar'
 
 const paths={
  user:<><circle cx="12" cy="7" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></>,
@@ -29,7 +30,6 @@ const demoOrders=[
  {id:'MG123454',date:'28 Apr 2025, 11:10 AM',amount:345,payment:'Online (Card)',status:'Processing',items:[['Meena Classic','/makhana-classic-red.jpg'],['Perfect Gold','/makhana-perfect-yellow.png']],stages:0,dates:['28 Apr, 11:10 AM','','','','']},
  {id:'MG123453',date:'15 Apr 2025, 09:15 AM',amount:220,payment:'UPI',status:'Cancelled',items:[['Perfect-2','/perfect-two-cutout.png']],stages:0,dates:['15 Apr, 09:15 AM','15 Apr, 10:00 AM']}
 ]
-const menu=[['user','My Profile','/profile'],['bag','My Orders','/orders'],['pin','Saved Addresses','/addresses'],['heart','Wishlist','/profile/wishlist'],['card','Payment Methods','/profile#payment-methods'],['bell','Notifications','#'],['headset','Help & Support','/contact'],['settings','Settings','/profile']]
 const stageNames=['Order Placed','Packed','Shipped','Out for Delivery','Delivered']
 const stageIcons=['receipt','package','truck','pin','home']
 const loadOrders=()=>read('meena-order-history',demoOrders).map(order=>order.status==='Delivered'&&order.dates?.length<5?{...order,dates:[...order.dates.slice(0,3),'15 May, 08:10 AM',order.dates[3]||'15 May, 11:45 AM']}:order)
@@ -41,9 +41,8 @@ export default function OrdersPage(){
  const cancel=id=>persist(orders.map(order=>order.id===id?{...order,status:'Cancelled'}:order))
  const buyAgain=order=>{const next={...cart};order.items.forEach(([name])=>{next[name]=(next[name]||0)+1});setCart(next);localStorage.setItem('meena-cart',JSON.stringify(next))}
  const cartCount=Object.values(cart).reduce((sum,value)=>sum+value,0)
- const logout=()=>{localStorage.removeItem('meena-auth');go('/login')}
  return <><StoreNavbar active="account" wishlistCount={wishlist.length} cartCount={cartCount}/><main className="orders-page"><div className="orders-shell">
-  <aside className="orders-sidebar"><header><h1>My Account</h1><p>Manage your profile, orders and more</p></header><nav aria-label="Account menu">{menu.map(([icon,label,href])=><a key={label} href={href} className={label==='My Orders'?'active':''} onClick={event=>{if(href==='#')event.preventDefault()}}><Icon name={icon}/><span>{label}</span>{label==='Wishlist'&&wishlist.length>0&&<b>{wishlist.length}</b>}{label==='My Orders'&&<i>›</i>}</a>)}</nav><button className="orders-logout" onClick={logout}><Icon name="logout"/>Logout</button><div className="orders-promo"><h2>Healthy<br/>Snacking<br/>Happier You</h2><p>Pure makhana for a healthier, brighter tomorrow.</p><button onClick={()=>go('/products')}>Shop Now <Icon name="arrow"/></button><img src="/wishlist-hero-banner.png" alt="Bowl of premium makhana"/></div></aside>
+  <AccountSidebar active="My Orders" wishlistCount={wishlist.length}/>
   <section className="orders-content"><header className="orders-heading"><div className="orders-title"><span><Icon name="package"/></span><div><h1>My Orders</h1><p>Track your orders, view details and reorder your favorites.</p></div></div><div className="orders-tools"><label><Icon name="search"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search your orders..." aria-label="Search orders"/></label><label className="orders-select"><Icon name="calendar"/><select value={status} onChange={e=>setStatus(e.target.value)} aria-label="Filter orders by status">{['All Orders','Processing','Shipped','Delivered','Cancelled'].map(item=><option key={item}>{item}</option>)}</select></label></div></header>
    <div className="orders-tabs" role="group" aria-label="Order status filters">{[['All Orders',12],['Processing',2],['Shipped',4],['Delivered',5],['Cancelled',1]].map(([label,count])=><button key={label} className={status===label?'active':''} onClick={()=>setStatus(label)}>{label} <span>({count})</span></button>)}</div>
    <div className="orders-list">{filtered.map(order=><OrderCard key={order.id} order={order} expanded={open===order.id} onToggle={()=>setOpen(open===order.id?null:order.id)} onCancel={()=>cancel(order.id)} onBuy={()=>buyAgain(order)}/>)}{!filtered.length&&<div className="orders-empty"><Icon name="package"/><h2>No matching orders</h2><p>Try a different order number, product name or status.</p><button onClick={()=>{setQuery('');setStatus('All Orders')}}>Show all orders</button></div>}</div>

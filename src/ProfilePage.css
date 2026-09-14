@@ -118,7 +118,7 @@
 .profile-reference+section b{color:#075c38!important}
 
 @media(max-width:1250px){
- .profile-reference>div{grid-template-columns:235px minmax(0,1fr)!important;gap:16px!important}
+ .profile-reference>div{grid-template-columns:270px minmax(0,1fr)!important;gap:16px!important}
  .profile-reference aside nav button{gap:10px!important;padding-inline:10px!important;font-size:13px!important}
  .profile-reference>div>section>div:nth-child(2)>button{flex-direction:column;align-items:flex-start!important;gap:8px!important}
  .profile-reference>div>section>div:nth-child(2) em{margin-top:8px!important}
