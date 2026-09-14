@@ -36,7 +36,7 @@ function PromiseStrip(){return <footer className="notification-promises" aria-la
 
 export default function NotificationsPage(){
  const wishlist=read('meena-wishlist',[])
- const [notifications,setNotifications]=useState(()=>read('meena-notifications',initialNotifications))
+ const [notifications,setNotifications]=useState(()=>{const saved=read('meena-notifications',initialNotifications);return Array.isArray(saved)?saved:initialNotifications})
  const [filter,setFilter]=useState('All')
  const [expanded,setExpanded]=useState(null)
  const persist=next=>{setNotifications(next);localStorage.setItem('meena-notifications',JSON.stringify(next))}
