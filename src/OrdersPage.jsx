@@ -13,6 +13,8 @@ const paths={
  settings:<><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2"/></>,
  logout:<><path d="M10 17l5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></>,
  package:<><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="m3 7 9 4 9-4v10l-9 4-9-4V7Zm9 4v10"/></>,
+ receipt:<><path d="M7 3h10v18l-2-1.5L12 21l-3-1.5L7 21V3Z"/><path d="M10 8h4m-4 4h4"/></>,
+ home:<><path d="m3 11 9-8 9 8v10h-7v-6h-4v6H3Z"/><path d="m9 12 2 2 4-4"/></>,
  search:<><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>,
  calendar:<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4m8-4v4M3 10h18"/></>,
  check:<path d="m7 12 3 3 7-7"/>,truck:<><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></>,
@@ -22,16 +24,18 @@ function Icon({name,className=''}){return <svg className={className} viewBox="0 
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 const go=path=>{history.pushState({},'',path);window.dispatchEvent(new PopStateEvent('popstate'));window.scrollTo({top:0,behavior:'smooth'})}
 const demoOrders=[
- {id:'MG123456',date:'12 May 2025, 10:30 AM',amount:756,payment:'UPI',status:'Delivered',items:[['Meena Premium','/meena-premium-cutout.png'],['Perfect-2','/perfect-two-cutout.png'],['Makhana Classic','/makhana-classic-red.jpg']],more:1,stages:4,dates:['12 May, 10:30 AM','12 May, 02:15 PM','13 May, 09:20 AM','15 May, 11:45 AM']},
+ {id:'MG123456',date:'12 May 2025, 10:30 AM',amount:756,payment:'UPI',status:'Delivered',items:[['Meena Premium','/meena-premium-cutout.png'],['Perfect-2','/perfect-two-cutout.png'],['Makhana Classic','/makhana-classic-red.jpg']],more:1,stages:4,dates:['12 May, 10:30 AM','12 May, 02:15 PM','13 May, 09:20 AM','15 May, 08:10 AM','15 May, 11:45 AM']},
  {id:'MG123455',date:'05 May 2025, 04:20 PM',amount:190,payment:'Cash on Delivery',status:'Shipped',items:[['Perfect Premium','/perfect-premium-cutout.png']],stages:2,dates:['05 May, 04:20 PM','06 May, 11:00 AM','06 May, 06:30 PM','','']},
  {id:'MG123454',date:'28 Apr 2025, 11:10 AM',amount:345,payment:'Online (Card)',status:'Processing',items:[['Meena Classic','/makhana-classic-red.jpg'],['Perfect Gold','/makhana-perfect-yellow.png']],stages:0,dates:['28 Apr, 11:10 AM','','','','']},
  {id:'MG123453',date:'15 Apr 2025, 09:15 AM',amount:220,payment:'UPI',status:'Cancelled',items:[['Perfect-2','/perfect-two-cutout.png']],stages:0,dates:['15 Apr, 09:15 AM','15 Apr, 10:00 AM']}
 ]
 const menu=[['user','My Profile','/profile'],['bag','My Orders','/orders'],['pin','Saved Addresses','/addresses'],['heart','Wishlist','/profile/wishlist'],['card','Payment Methods','/profile#payment-methods'],['bell','Notifications','#'],['headset','Help & Support','/contact'],['settings','Settings','/profile']]
 const stageNames=['Order Placed','Packed','Shipped','Out for Delivery','Delivered']
+const stageIcons=['receipt','package','truck','pin','home']
+const loadOrders=()=>read('meena-order-history',demoOrders).map(order=>order.status==='Delivered'&&order.dates?.length<5?{...order,dates:[...order.dates.slice(0,3),'15 May, 08:10 AM',order.dates[3]||'15 May, 11:45 AM']}:order)
 
 export default function OrdersPage(){
- const [orders,setOrders]=useState(()=>read('meena-order-history',demoOrders));const [query,setQuery]=useState(''),[status,setStatus]=useState('All Orders'),[open,setOpen]=useState(null),[cart,setCart]=useState(()=>read('meena-cart',{}));const wishlist=read('meena-wishlist',[])
+ const [orders,setOrders]=useState(loadOrders);const [query,setQuery]=useState(''),[status,setStatus]=useState('All Orders'),[open,setOpen]=useState(null),[cart,setCart]=useState(()=>read('meena-cart',{}));const wishlist=read('meena-wishlist',[])
  const filtered=useMemo(()=>orders.filter(order=>(status==='All Orders'||order.status===status)&&(`${order.id} ${order.items.map(x=>x[0]).join(' ')}`.toLowerCase().includes(query.toLowerCase()))),[orders,query,status])
  const persist=next=>{setOrders(next);localStorage.setItem('meena-order-history',JSON.stringify(next))}
  const cancel=id=>persist(orders.map(order=>order.id===id?{...order,status:'Cancelled'}:order))
@@ -53,5 +57,9 @@ function OrderCard({order,expanded,onToggle,onCancel,onBuy}){
   {expanded&&<div className="order-details"><div><b>Delivery Address</b><p>85 P, Maranga, Purnia, Bihar 854301</p></div><div><b>Items in this order</b><p>{order.items.map(x=>x[0]).join(' · ')}</p></div><div><b>Order support</b><button onClick={()=>go('/contact')}>Get help <span>→</span></button></div></div>}
  </article>
 }
-function Timeline({order}){if(order.status==='Cancelled')return <div className="order-timeline cancelled-line"><div className="timeline-step done"><i><Icon name="check"/></i><b>Order Placed</b><small>{order.dates[0]}</small></div><div className="timeline-step cancelled-step"><i><Icon name="x"/></i><b>Cancelled</b><small>{order.dates[1]}</small></div></div>;return <div className="order-timeline">{stageNames.map((name,index)=>{const done=index<=order.stages;return <div className={`timeline-step ${done?'done':''}`} key={name}><i>{done?<Icon name="check"/>:index===2?<Icon name="truck"/>:''}</i><b>{name}</b><small>{order.dates[index]||'Pending'}</small></div>})}</div>}
+function Timeline({order}){
+ if(order.status==='Cancelled')return <div className="order-timeline cancelled-line" style={{'--progress-scale':1}} aria-label="Order cancelled"><div className="timeline-step done" style={{'--step-index':0}}><i><Icon name="receipt"/><span className="timeline-check"><Icon name="check"/></span></i><b>Order Placed</b><small>{order.dates[0]}</small></div><div className="timeline-step cancelled-step current" style={{'--step-index':1}}><i><Icon name="x"/></i><b>Cancelled</b><small>{order.dates[1]}</small></div></div>
+ const progress=Math.max(0,Math.min(1,order.stages/(stageNames.length-1)))
+ return <div className="order-timeline" style={{'--progress-scale':progress}} aria-label={`${order.status} order progress`}>{stageNames.map((name,index)=>{const done=index<=order.stages;const current=index===order.stages&&order.stages<stageNames.length-1;return <div className={`timeline-step ${done?'done':''} ${current?'current':''}`} style={{'--step-index':index}} key={name}><i><Icon name={stageIcons[index]}/><span className="timeline-check"><Icon name="check"/></span></i><b>{name}</b><small>{order.dates[index]||'Pending'}</small></div>})}</div>
+}
 function PromiseStrip(){return <section className="orders-promises" aria-label="Our quality promises">{[['leaf','100% Natural Ingredients','No artificial colors & flavors'],['heart','Hygienically Processed','Clean & safe production'],['shield','Authentic Taste','Pure & premium quality'],['truck','Pan India Delivery','Fast & reliable shipping']].map(([icon,title,sub])=><div key={title}><span><Icon name={icon}/></span><p><b>{title}</b><small>{sub}</small></p></div>)}</section>}
