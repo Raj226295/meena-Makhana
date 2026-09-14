@@ -1,7 +1,8 @@
 import {useMemo,useState} from 'react'
 import Footer from './Footer'
 import StoreNavbar from './StoreNavbar'
-import './ProductsPage.css'
+import ProductCardSkeleton from './ProductCardSkeleton'
+import useProductsLoading from './useProductsLoading'
 
 function saved(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function Icon({name,size=20}){const paths={search:'m21 21-4.3-4.3M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.5 10.5l7-4M8.5 13.5l7 4',cart:'M3 4h2l2 10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l2-7H6m4 13h.01M17 20h.01',grid:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',list:'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',sliders:'M4 7h10M18 7h2M4 17h2M10 17h10M7 14v6M17 4v6',bag:'M6 8h12l-1 12H7L6 8Zm3 0a3 3 0 0 1 6 0',ruler:'M7 3h10v18H7V3Zm4 4h6m-3 4h3m-6 4h6',rupee:'M7 5h10M7 9h10M7 5c5 0 7 1.5 7 4s-2 4-7 4l8 6',trend:'m4 16 6-6 4 4 6-8M16 6h4v4'};return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[name]}/></svg>}
@@ -21,6 +22,7 @@ export default function ProductsPage({products}){
  const add=(name,quantity=1)=>setCart(items=>{const next={...items,[name]:(items[name]||0)+quantity};localStorage.setItem('meena-cart',JSON.stringify(next));setNotice(`${name} added to cart`);return next})
  const count=Object.values(cart).reduce((sum,n)=>sum+n,0)
  const allProducts=useMemo(()=>[...products,...additionalProducts],[products])
+ const productsLoading=useProductsLoading(allProducts)
  const shown=useMemo(()=>{
   const filtered=allProducts.filter(p=>(category==='All Products'||p.name===category)&&(p.name+' '+p.type).toLowerCase().includes(query.toLowerCase()))
   return [...filtered].sort((a,b)=>sort==='price-low'?a.price-b.price:sort==='price-high'?b.price-a.price:a.name.localeCompare(b.name))
@@ -29,7 +31,7 @@ export default function ProductsPage({products}){
  return <div className="catalog-page">
   <StoreNavbar active="products" query={query} onQueryChange={setQuery} wishlistCount={liked.length} cartCount={count}/>
   <main className="catalog-main">
-   <section className="catalog-toolbar" aria-label="Product filters">
+   <section className="catalog-toolbar min-[1181px]:relative min-[1181px]:left-1/2 min-[1181px]:!min-h-[84px] min-[1181px]:!w-[calc(100vw-40px)] min-[1181px]:max-w-[1498px] min-[1181px]:[transform:translateX(-50%)] min-[1181px]:!flex-nowrap" aria-label="Product filters">
     <div className="filter-heading"><span><Icon name="sliders" size={19}/></span><b>FILTER BY</b></div>
     <div className="filter-group">
      <label className="filter-control"><Icon name="bag" size={18}/><select aria-label="Select product" value={category} onChange={e=>setCategory(e.target.value)}><option>All Products</option><option>Meena Premium</option><option>Perfect Premium</option><option>Perfect-2</option><option>Sandesh Organic</option></select></label>
@@ -41,8 +43,8 @@ export default function ProductsPage({products}){
     <label className="sort-control"><small>SORT BY</small><span><Icon name="trend" size={18}/></span><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Sort products"><option value="popular">Popular</option><option value="price-low">Price: Low to High</option><option value="price-high">Price: High to Low</option></select></label>
     <div className="view-buttons"><button className={view==='grid'?'active':''} onClick={()=>setView('grid')} aria-label="Grid view"><Icon name="grid"/></button><button className={view==='list'?'active':''} onClick={()=>setView('list')} aria-label="List view"><Icon name="list"/></button></div>
    </section>
-   <p className="catalog-count">Showing {shown.length} products</p>
-   <section className={'catalog-grid '+view} aria-label="Products">{shown.map(p=>{
+   <p className="catalog-count">{productsLoading?'Loading products…':`Showing ${shown.length} products`}</p>
+   {productsLoading?<section className="grid grid-cols-2 gap-3 min-[1051px]:grid-cols-4 min-[1051px]:gap-[18px]" aria-label="Loading products" aria-busy="true">{allProducts.slice(0,4).map(product=><ProductCardSkeleton key={product.name} variant="catalog"/>)}</section>:<section className={'catalog-grid '+view} aria-label="Products">{shown.map(p=>{
     const minimum=mode==='wholesale'?5:1
     const quantity=Math.max(minimum,quantities[p.name]||minimum)
     const unitPrice=mode==='wholesale'?Math.round(p.price*.88):p.price
@@ -63,8 +65,8 @@ export default function ProductsPage({products}){
       <button className="catalog-buy" onClick={()=>add(p.name,quantity)}>BUY NOW</button>
      </div>
     </article>
-   })}</section>
-   {!shown.length&&<div className="catalog-empty"><h2>No products found</h2><p>Try another product name.</p></div>}
+   })}</section>}
+   {!productsLoading&&!shown.length&&<div className="catalog-empty"><h2>No products found</h2><p>Try another product name.</p></div>}
   </main>
   {notice&&<div className="catalog-toast" role="status">{notice}<button onClick={()=>setNotice('')} aria-label="Dismiss">×</button></div>}
   <Footer/>

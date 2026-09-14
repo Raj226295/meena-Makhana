@@ -1,5 +1,4 @@
 import {useEffect,useRef,useState} from 'react'
-import './DeliveryLocation.css'
 
 function saved(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function Pin(){return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M12 22S4 15 4 9a8 8 0 0 1 16 0c0 6-8 13-8 13Z"/><circle cx="12" cy="9" r="2.5"/></svg>}

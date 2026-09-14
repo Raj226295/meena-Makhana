@@ -1,12 +1,10 @@
 import {useState} from 'react'
-import './LoginPage.css'
-import './SignupPage.css'
 
 function Icon({name}){const paths={user:<><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></>,mail:<><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></>,lock:<><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2"/></>,eye:<><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></>,eyeOff:<><path d="m3 3 18 18M10.6 6.2A10 10 0 0 1 12 6c6 0 10 6 10 6a17 17 0 0 1-2.1 2.7M6.2 6.2C3.6 8 2 12 2 12s4 6 10 6a9.8 9.8 0 0 0 4.1-.9M9.9 9.9a3 3 0 0 0 4.2 4.2"/></>,arrow:<><path d="M4 12h15M14 6l6 6-6 6"/></>};return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>}
 
 export default function SignupPage(){
  const [showPassword,setShowPassword]=useState(false),[showConfirm,setShowConfirm]=useState(false),[notice,setNotice]=useState('')
- const submit=e=>{e.preventDefault();const form=new FormData(e.currentTarget);setNotice(form.get('password')===form.get('confirm')?'Account registration service will be available soon.':'Passwords do not match.')}
+ const submit=e=>{e.preventDefault();const form=new FormData(e.currentTarget);if(form.get('password')!==form.get('confirm')){setNotice('Passwords do not match.');return}const identifier=form.get('email').trim();const profile={name:form.get('name').trim(),email:identifier.includes('@')?identifier:'',phone:identifier.includes('@')?'':identifier,dob:'Not added',gender:'Not specified',memberSince:new Intl.DateTimeFormat('en-IN',{month:'long',year:'numeric'}).format(new Date())};localStorage.setItem('meena-profile',JSON.stringify(profile));localStorage.setItem('meena-auth',JSON.stringify({loggedIn:true}));history.pushState({},'','/profile');window.dispatchEvent(new PopStateEvent('popstate'))}
  return <main className="login-page signup-page"><a className="login-home" href="/" aria-label="Back to Meena Green home"><img src="/meena-logo-premium.png" alt="Meena Green"/></a><section className="login-card signup-card" aria-labelledby="signup-title"><h1 id="signup-title">Sign Up</h1><form onSubmit={submit}>
   <label className="login-field"><Icon name="user"/><input name="name" type="text" required autoComplete="name" placeholder="Full Name" aria-label="Full name"/></label>
   <label className="login-field"><Icon name="mail"/><input name="email" type="text" required autoComplete="email" placeholder="Email or Mobile Number" aria-label="Email or mobile number"/></label>
