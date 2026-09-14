@@ -16,16 +16,17 @@ const ribbonItems=[
  ['leaf','100% Natural']
 ]
 function BenefitsRibbon(){
+ const [phaseDelay]=useState(()=>`-${(Date.now()-ribbonStartedAt)%19000}ms`)
  const renderItems=prefix=>ribbonItems.map(([icon,title])=><div className="benefit-item" key={`${prefix}-${title}`}><RibbonIcon name={icon}/><b>{title}</b><span className="benefit-dot" aria-hidden="true">•</span></div>)
  return <div className="benefits-ribbon" aria-label="Meena Green benefits">
-  <div className="benefit-marquee" style={{animationDelay:ribbonDelay}}>
+  <div className="benefit-marquee" style={{animationDelay:phaseDelay||ribbonDelay}}>
    <div className="benefit-group">{renderItems('primary')}</div>
    <div className="benefit-group" aria-hidden="true">{renderItems('duplicate')}</div>
   </div>
  </div>
 }
 
-export default function StoreNavbar({active='home',query='',onQueryChange,onProfile,onWishlist,onCart,wishlistCount=0,cartCount=0}){
+export default function StoreNavbar({active='products',query='',onQueryChange,onProfile,onWishlist,onCart,wishlistCount=0,cartCount=0}){
  const [menuOpen,setMenuOpen]=useState(false)
  const submitSearch=e=>{
   e.preventDefault()

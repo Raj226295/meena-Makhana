@@ -1,64 +1,44 @@
 import {useMemo,useState} from 'react'
 import StoreNavbar from './StoreNavbar'
-import './OrdersPage.css'
 import AccountSidebar from './AccountSidebar'
+import {getOrders} from './ordersData'
+import './OrdersPage.css'
 
 const paths={
- user:<><circle cx="12" cy="7" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></>,
- bag:<><path d="M5 8h14l-1 13H6L5 8Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></>,
- pin:<><path d="M19 10c0 5-7 12-7 12S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></>,
- heart:<path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 0 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/>,
- card:<><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></>,
- bell:<><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></>,
- headset:<><path d="M4 14v-2a8 8 0 0 1 16 0v2M4 14h3v6H4Zm16 0h-3v6h3Z"/></>,
- settings:<><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2"/></>,
- logout:<><path d="M10 17l5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></>,
- package:<><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="m3 7 9 4 9-4v10l-9 4-9-4V7Zm9 4v10"/></>,
- receipt:<><path d="M7 3h10v18l-2-1.5L12 21l-3-1.5L7 21V3Z"/><path d="M10 8h4m-4 4h4"/></>,
- home:<><path d="m3 11 9-8 9 8v10h-7v-6h-4v6H3Z"/><path d="m9 12 2 2 4-4"/></>,
- search:<><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>,
- calendar:<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4m8-4v4M3 10h18"/></>,
- check:<path d="m7 12 3 3 7-7"/>,truck:<><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></>,
- cart:<><path d="M3 4h2l2 10h11l2-7H6M9 20h.01M17 20h.01"/></>,arrow:<path d="M5 12h14m-5-5 5 5-5 5"/>,clock:<><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></>,x:<><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/></>,leaf:<><path d="M20 4C11 4 5 9 5 18c9 0 15-6 15-14Z"/><path d="M5 18 20 4"/></>,shield:<><path d="M12 3c3 2 5 3 8 3v6c0 5-3 8-8 10-5-2-8-5-8-10V6c3 0 5-1 8-3Z"/><path d="m9 12 2 2 4-5"/></>
+ search:<><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>,filter:<><path d="M4 5h16l-6 7v5l-4 2v-7Z"/></>,down:<path d="m6 9 6 6 6-6"/>,chevron:<path d="m9 5 7 7-7 7"/>,
+ receipt:<><rect x="5" y="3" width="14" height="18" rx="2"/><path d="m9 3 1 2 2-2 2 2 1-2M9 10h6m-6 4h4"/></>,package:<><path d="m3 7 9-4 9 4-9 4Z"/><path d="m3 7 9 4 9-4v10l-9 4-9-4V7Zm9 4v10"/></>,truck:<><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></>,home:<><path d="m3 11 9-8 9 8v10h-7v-6h-4v6H3Z"/><path d="m9 12 2 2 4-4"/></>,
+ pin:<><path d="M19 10c0 5-7 12-7 12S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></>,cart:<><path d="M3 4h2l2 10h11l2-7H6M9 20h.01M17 20h.01"/></>,x:<><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/></>,check:<path d="m6 12 4 4 8-9"/>,
+ leaf:<><path d="M20 4C11 4 5 9 5 18c9 0 15-6 15-14Z"/><path d="M5 18 20 4"/></>,heart:<path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 0 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/>,shield:<><path d="M12 3c3 2 5 3 8 3v6c0 5-3 8-8 10-5-2-8-5-8-10V6c3 0 5-1 8-3Z"/><path d="m9 12 2 2 4-5"/></>
 }
-function Icon({name,className=''}){return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>}
+function Icon({name}){return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>}
 const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
-const go=path=>{history.pushState({},'',path);window.dispatchEvent(new PopStateEvent('popstate'));window.scrollTo({top:0,behavior:'smooth'})}
-const demoOrders=[
- {id:'MG123456',date:'12 May 2025, 10:30 AM',amount:756,payment:'UPI',status:'Delivered',items:[['Meena Premium','/meena-premium-cutout.png'],['Perfect-2','/perfect-two-cutout.png'],['Makhana Classic','/makhana-classic-red.jpg']],more:1,stages:4,dates:['12 May, 10:30 AM','12 May, 02:15 PM','13 May, 09:20 AM','15 May, 08:10 AM','15 May, 11:45 AM']},
- {id:'MG123455',date:'05 May 2025, 04:20 PM',amount:190,payment:'Cash on Delivery',status:'Shipped',items:[['Perfect Premium','/perfect-premium-cutout.png']],stages:2,dates:['05 May, 04:20 PM','06 May, 11:00 AM','06 May, 06:30 PM','','']},
- {id:'MG123454',date:'28 Apr 2025, 11:10 AM',amount:345,payment:'Online (Card)',status:'Processing',items:[['Meena Classic','/makhana-classic-red.jpg'],['Perfect Gold','/makhana-perfect-yellow.png']],stages:0,dates:['28 Apr, 11:10 AM','','','','']},
- {id:'MG123453',date:'15 Apr 2025, 09:15 AM',amount:220,payment:'UPI',status:'Cancelled',items:[['Perfect-2','/perfect-two-cutout.png']],stages:0,dates:['15 Apr, 09:15 AM','15 Apr, 10:00 AM']}
-]
-const stageNames=['Order Placed','Packed','Shipped','Out for Delivery','Delivered']
-const stageIcons=['receipt','package','truck','pin','home']
-const loadOrders=()=>read('meena-order-history',demoOrders).map(order=>order.status==='Delivered'&&order.dates?.length<5?{...order,dates:[...order.dates.slice(0,3),'15 May, 08:10 AM',order.dates[3]||'15 May, 11:45 AM']}:order)
+const go=path=>{history.pushState({},'',path);window.dispatchEvent(new PopStateEvent('popstate'));window.scrollTo({top:0})}
+const tabs=['All Orders','Processing','Shipped','Delivered','Cancelled','Returned']
 
 export default function OrdersPage(){
- const [orders,setOrders]=useState(loadOrders);const [query,setQuery]=useState(''),[status,setStatus]=useState('All Orders'),[open,setOpen]=useState(null),[cart,setCart]=useState(()=>read('meena-cart',{}));const wishlist=read('meena-wishlist',[])
- const filtered=useMemo(()=>orders.filter(order=>(status==='All Orders'||order.status===status)&&(`${order.id} ${order.items.map(x=>x[0]).join(' ')}`.toLowerCase().includes(query.toLowerCase()))),[orders,query,status])
+ const [orders,setOrders]=useState(getOrders),[query,setQuery]=useState(''),[status,setStatus]=useState('All Orders'),[filterOpen,setFilterOpen]=useState(false),[expanded,setExpanded]=useState(null),[cancelId,setCancelId]=useState(null),[notice,setNotice]=useState(''),[cart,setCart]=useState(()=>read('meena-cart',{}))
+ const wishlist=read('meena-wishlist',[]),notifications=read('meena-notifications',[]),notificationCount=Array.isArray(notifications)?notifications.filter(item=>item.unread).length:0
+ const filtered=useMemo(()=>orders.filter(order=>(status==='All Orders'||order.status===status)&&`${order.id} ${order.name} ${order.variant}`.toLowerCase().includes(query.trim().toLowerCase())),[orders,query,status])
+ const counts=useMemo(()=>Object.fromEntries(tabs.map(tab=>[tab,tab==='All Orders'?orders.length:orders.filter(order=>order.status===tab).length])),[orders])
+ const toast=text=>{setNotice(text);window.setTimeout(()=>setNotice(''),2300)}
  const persist=next=>{setOrders(next);localStorage.setItem('meena-order-history',JSON.stringify(next))}
- const cancel=id=>persist(orders.map(order=>order.id===id?{...order,status:'Cancelled'}:order))
- const buyAgain=order=>{const next={...cart};order.items.forEach(([name])=>{next[name]=(next[name]||0)+1});setCart(next);localStorage.setItem('meena-cart',JSON.stringify(next))}
+ const cancelOrder=()=>{persist(orders.map(order=>order.id===cancelId?{...order,status:'Cancelled'}:order));setCancelId(null);toast('Order cancelled successfully.')}
+ const buyAgain=order=>{const next={...cart,[order.name]:(cart[order.name]||0)+order.qty};setCart(next);localStorage.setItem('meena-cart',JSON.stringify(next));toast(`${order.name} added to your cart.`)}
+ const track=order=>{setExpanded(expanded===order.id?null:order.id);toast(`${order.status} · Latest tracking details shown.`)}
  const cartCount=Object.values(cart).reduce((sum,value)=>sum+value,0)
- return <><StoreNavbar active="account" wishlistCount={wishlist.length} cartCount={cartCount}/><main className="orders-page"><div className="orders-shell">
-  <AccountSidebar active="My Orders" wishlistCount={wishlist.length}/>
-  <section className="orders-content"><header className="orders-heading"><div className="orders-title"><span><Icon name="package"/></span><div><h1>My Orders</h1><p>Track your orders, view details and reorder your favorites.</p></div></div><div className="orders-tools"><label><Icon name="search"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search your orders..." aria-label="Search orders"/></label><label className="orders-select"><Icon name="calendar"/><select value={status} onChange={e=>setStatus(e.target.value)} aria-label="Filter orders by status">{['All Orders','Processing','Shipped','Delivered','Cancelled'].map(item=><option key={item}>{item}</option>)}</select></label></div></header>
-   <div className="orders-tabs" role="group" aria-label="Order status filters">{[['All Orders',12],['Processing',2],['Shipped',4],['Delivered',5],['Cancelled',1]].map(([label,count])=><button key={label} className={status===label?'active':''} onClick={()=>setStatus(label)}>{label} <span>({count})</span></button>)}</div>
-   <div className="orders-list">{filtered.map(order=><OrderCard key={order.id} order={order} expanded={open===order.id} onToggle={()=>setOpen(open===order.id?null:order.id)} onCancel={()=>cancel(order.id)} onBuy={()=>buyAgain(order)}/>)}{!filtered.length&&<div className="orders-empty"><Icon name="package"/><h2>No matching orders</h2><p>Try a different order number, product name or status.</p><button onClick={()=>{setQuery('');setStatus('All Orders')}}>Show all orders</button></div>}</div>
-  </section></div></main><PromiseStrip/></>
+ return <><StoreNavbar active="account" wishlistCount={wishlist.length||3} cartCount={cartCount||2}/><main className="orders-page-v2"><div className="orders-shell-v2"><AccountSidebar active="My Orders" wishlistCount={wishlist.length||3} notificationCount={notificationCount}/><section className="orders-main-v2">
+  <header className="orders-heading-v2"><div><h1>My Orders</h1><p>Track, return or buy again from your orders.</p></div><div className="orders-tools-v2"><label><Icon name="search"/><input value={query} onChange={event=>setQuery(event.target.value)} placeholder="Search your orders..." aria-label="Search your orders"/>{query&&<button onClick={()=>setQuery('')} aria-label="Clear order search">×</button>}</label><div className="orders-filter-v2"><button onClick={()=>setFilterOpen(value=>!value)} aria-expanded={filterOpen}><Icon name="filter"/>Filter<Icon name="down"/></button>{filterOpen&&<div>{tabs.map(tab=><button key={tab} className={status===tab?'active':''} onClick={()=>{setStatus(tab);setFilterOpen(false)}}>{tab}<span>{counts[tab]}</span></button>)}</div>}</div></div></header>
+  <nav className="orders-tabs-v2" aria-label="Order status filters">{tabs.map(tab=><button key={tab} className={status===tab?'active':''} onClick={()=>setStatus(tab)}>{tab}{counts[tab]>0&&<span>{counts[tab]}</span>}</button>)}</nav>
+  <div className="orders-list-v2">{filtered.map(order=><OrderCard key={order.id} order={order} expanded={expanded===order.id} onDetails={()=>go(`/orders/${encodeURIComponent(order.id)}`)} onTrack={()=>track(order)} onBuy={()=>buyAgain(order)} onCancel={()=>setCancelId(order.id)}/>)}{!filtered.length&&<div className="orders-empty-v2"><Icon name="package"/><h2>No matching orders</h2><p>Try another product, order number or status.</p><button onClick={()=>{setQuery('');setStatus('All Orders')}}>Show All Orders</button></div>}</div>
+ </section></div></main><PromiseStrip/>
+ {cancelId&&<div className="orders-modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)setCancelId(null)}}><section className="orders-modal-v2" role="dialog" aria-modal="true" aria-labelledby="cancel-order-title"><i><Icon name="x"/></i><h2 id="cancel-order-title">Cancel this order?</h2><p>The order will be moved to Cancelled. You can buy it again later.</p><div><button onClick={()=>setCancelId(null)}>Keep Order</button><button className="danger" onClick={cancelOrder}>Cancel Order</button></div></section></div>}
+ {notice&&<div className="orders-toast-v2" role="status"><Icon name="check"/>{notice}</div>}</>
 }
 
-function OrderCard({order,expanded,onToggle,onCancel,onBuy}){
- const cancelled=order.status==='Cancelled';const statusIcon=cancelled?'x':order.status==='Processing'?'clock':order.status==='Shipped'?'truck':'check'
- return <article className="order-card"><header><div className="order-number"><span><Icon name="package"/></span><div><h2>Order #{order.id}</h2><p>Placed on {order.date}</p></div></div><dl><div><dt>Total Amount</dt><dd>₹{order.amount}</dd></div><div><dt>Payment Method</dt><dd>{order.payment}</dd></div></dl><span className={`order-status ${order.status.toLowerCase()}`}><Icon name={statusIcon}/>{order.status}</span><button className="order-outline" onClick={onToggle}>View Details <span>›</span></button></header>
-  <div className="order-body"><div className="order-products"><div className="order-images">{order.items.slice(0,3).map(([name,image])=><img key={name} src={image} alt=""/>)}{order.more&&<span>+{order.more}</span>}</div><div><h3>{order.items.length+(order.more||0)} {order.items.length+(order.more||0)===1?'Item':'Items'}</h3><p>{order.items.map(x=>x[0]).join(', ')}{order.more?' & more':''}</p></div></div><Timeline order={order}/>{cancelled||order.status==='Delivered'?<button className="order-primary" onClick={onBuy}><Icon name="cart"/>Buy Again</button>:order.status==='Processing'?<button className="order-danger" onClick={onCancel}><Icon name="x"/>Cancel Order</button>:<button className="order-primary" onClick={onToggle}><Icon name="truck"/>Track Order</button>}</div>
-  {expanded&&<div className="order-details"><div><b>Delivery Address</b><p>85 P, Maranga, Purnia, Bihar 854301</p></div><div><b>Items in this order</b><p>{order.items.map(x=>x[0]).join(' · ')}</p></div><div><b>Order support</b><button onClick={()=>go('/contact')}>Get help <span>→</span></button></div></div>}
- </article>
+function OrderCard({order,expanded,onDetails,onTrack,onBuy,onCancel}){
+ const stage=order.status==='Delivered'?3:order.status==='Out for Delivery'?2:order.status==='Shipped'?1:0
+ const canCancel=!['Delivered','Cancelled','Returned'].includes(order.status)
+ return <article className={`order-card-v2 ${order.status.toLowerCase().replaceAll(' ','-')}`}><header><p><b>Order #{order.id}</b><span/>Placed on {order.date}<span/>₹{order.amount}</p><button onClick={onDetails}>View Details <Icon name="chevron"/></button></header><div className="order-content-v2"><div className="order-product-v2"><img src={order.image} alt={order.name}/><div><h2>{order.name}</h2><p>{order.variant}</p><small>Qty: {order.qty}</small><strong>₹{order.amount}</strong></div></div><OrderTimeline order={order} stage={stage}/><div className="order-actions-v2"><button onClick={onTrack}><Icon name="pin"/>Track Order</button>{order.status==='Delivered'||order.status==='Cancelled'?<button className="primary" onClick={onBuy}><Icon name="cart"/>Buy Again</button>:canCancel&&<button className="cancel" onClick={onCancel}><Icon name="x"/>Cancel Order</button>}</div></div>{expanded&&<div className="order-details-v2"><div><b>Latest Tracking Update</b><p>{order.status} · Package status refreshed just now.</p></div><div><b>Payment</b><p>{order.payment} · ₹{order.amount}</p></div><div><b>Need help?</b><button onClick={()=>go('/support')}>Contact Support <Icon name="chevron"/></button></div></div>}</article>
 }
-function Timeline({order}){
- if(order.status==='Cancelled')return <div className="order-timeline cancelled-line" style={{'--progress-scale':1}} aria-label="Order cancelled"><div className="timeline-step done" style={{'--step-index':0}}><i><Icon name="receipt"/><span className="timeline-check"><Icon name="check"/></span></i><b>Order Placed</b><small>{order.dates[0]}</small></div><div className="timeline-step cancelled-step current" style={{'--step-index':1}}><i><Icon name="x"/></i><b>Cancelled</b><small>{order.dates[1]}</small></div></div>
- const progress=Math.max(0,Math.min(1,order.stages/(stageNames.length-1)))
- return <div className="order-timeline" style={{'--progress-scale':progress}} aria-label={`${order.status} order progress`}>{stageNames.map((name,index)=>{const done=index<=order.stages;const current=index===order.stages&&order.stages<stageNames.length-1;return <div className={`timeline-step ${done?'done':''} ${current?'current':''}`} style={{'--step-index':index}} key={name}><i><Icon name={stageIcons[index]}/><span className="timeline-check"><Icon name="check"/></span></i><b>{name}</b><small>{order.dates[index]||'Pending'}</small></div>})}</div>
-}
-function PromiseStrip(){return <section className="orders-promises" aria-label="Our quality promises">{[['leaf','100% Natural Ingredients','No artificial colors & flavors'],['heart','Hygienically Processed','Clean & safe production'],['shield','Authentic Taste','Pure & premium quality'],['truck','Pan India Delivery','Fast & reliable shipping']].map(([icon,title,sub])=><div key={title}><span><Icon name={icon}/></span><p><b>{title}</b><small>{sub}</small></p></div>)}</section>}
+function OrderTimeline({order,stage}){const names=['Order Placed','Shipped','Out for Delivery','Delivered'],icons=['receipt','package','truck','home'];return <div className={`order-timeline-v2 ${order.status==='Cancelled'?'cancelled':''}`} style={{'--order-progress':order.status==='Cancelled'?0:stage/3}} aria-label={`${order.status} order progress`}>{names.map((name,index)=>{const done=order.status!=='Cancelled'&&index<=stage;return <div className={done?'done':''} key={name}><i><Icon name={icons[index]}/></i><b>{name}</b><small>{order.times?.[index]||'—'}</small></div>})}</div>}
+function PromiseStrip(){return <footer className="orders-promises-v2"><div className="orders-brand-v2"><img src="/meena-logo-premium.png" alt="Meena Green"/></div>{[['leaf','100% Natural Ingredients','No artificial colors & flavors'],['heart','Hygienically Processed','Clean & safe production'],['shield','Authentic Taste','Pure & premium quality'],['truck','Pan India Delivery','Fast & reliable shipping']].map(([icon,title,text])=><div key={title}><i><Icon name={icon}/></i><span><b>{title}</b><small>{text}</small></span></div>)}</footer>}

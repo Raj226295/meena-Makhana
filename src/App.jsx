@@ -11,8 +11,14 @@ import ProfilePage from './ProfilePage'
 import SavedAddressesPage from './SavedAddressesPage'
 import AccountWishlistPage from './AccountWishlistPage'
 import OrdersPage from './OrdersPage'
+import OrderDetailsPage from './OrderDetailsPage'
 import PaymentMethodsPage from './PaymentMethodsPage'
 import NotificationsPage from './NotificationsPage'
+import HelpSupportPage from './HelpSupportPage'
+import SettingsPage from './SettingsPage'
+import ProductDetailsPage from './ProductDetailsPage'
+import CheckoutPage from './CheckoutPage'
+import OrderSuccessPage from './OrderSuccessPage'
 import ProductCardSkeleton from './ProductCardSkeleton'
 import useProductsLoading from './useProductsLoading'
 import { useEffect, useRef, useState } from 'react'
@@ -22,6 +28,12 @@ const products = [
   { name:'Perfect Premium', type:'Plain Makhana', price:190, image:'/perfect-premium-cutout.png' },
   { name:'Perfect-2', type:'Premium Makhana', price:190, image:'/perfect-two-cutout.png' },
   { name:'Sandesh Organic', type:'Organic Makhana', price:170, image:'/sandesh-cutout.png' },
+]
+const productCatalog=[...products,
+ {name:'Meena Classic',type:'Plain Makhana',price:155,image:'/makhana-classic-red.jpg'},
+ {name:'Premium Select',type:'Premium Makhana',price:210,image:'/makhana-premium-yellow.png'},
+ {name:'Perfect Gold',type:'Premium Makhana',price:195,image:'/makhana-perfect-yellow.png'},
+ {name:'Perfect Purple',type:'Roasted Makhana',price:205,image:'/makhana-perfect-purple.png'},
 ]
 const iconPaths={share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.6 10.5l6.8-4M8.6 13.5l6.8 4',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',home:'M3 11.5 12 4l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',pin:'M12 22s7-6 7-13A7 7 0 0 0 5 9c0 7 7 13 7 13Zm0-10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z',search:'m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z',user:'M20 21a8 8 0 0 0-16 0m12-13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',cart:'M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6m4 13h.01M17 20h.01',menu:'M4 7h16M4 12h16M4 17h16',chevron:'m8 10 4 4 4-4'}
 function Icon({name,size=24}){return <svg className="ui-icon" width={size} height={size} viewBox="0 0 24 24" fill={name==='home'?'currentColor':'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={iconPaths[name]}/></svg>}
@@ -53,7 +65,8 @@ function ProductCard({product,liked,onLike,onAdd,section}){
   try{await navigator.clipboard.writeText(url.href);setFeedback('Product link copied')}
   catch{setFeedback('Copy this product link: '+url.href)}
  }
- const add=()=>{onAdd();setFeedback(product.name+' added to cart')}
+ const add=()=>{onAdd();setFeedback('')}
+ const openDetails=()=>{sessionStorage.setItem('meena-checkout-product',JSON.stringify({name:product.name,quantity:1}));history.pushState({},'','/checkout');window.dispatchEvent(new PopStateEvent('popstate'));window.scrollTo(0,0)}
  return <article className="product-card" id={section==='range'?id:undefined}>
   <div className="product-ribbon">PREMIUM</div>
   <div className="product-tools"><button className="share-product" onClick={share} aria-label={'Copy share link for '+product.name}><Icon name="share" size={20}/></button><button className={'heart '+(liked?'liked':'')} onClick={onLike} aria-label={(liked?'Remove from wishlist: ':'Add to wishlist: ')+product.name} aria-pressed={liked}><Icon name="heart" size={21}/></button></div>
@@ -61,7 +74,7 @@ function ProductCard({product,liked,onLike,onAdd,section}){
   <div className="product-title-row"><h3>{product.name}</h3><button className="quick-cart" onClick={add} aria-label={'Add '+product.name+' to cart'}><Icon name="cart" size={25}/></button></div>
   <div className="product-weight"><select aria-label={'Pack size for '+product.name} defaultValue="250"><option value="250">250g</option></select><Icon name="chevron" size={19}/></div>
   <strong className="product-price">₹{product.price}</strong><p className="product-unit-price">₹{product.price} for 250g</p>
-  <button className="buy-now" onClick={add}><Icon name="cart" size={21}/><span>BUY NOW</span></button>
+  <button className="buy-now" onClick={openDetails}><span>BUY NOW</span></button>
   <div className="product-feedback" role="status">{feedback}</div>
  </article>
 }
@@ -71,18 +84,24 @@ function App(){
  const [path,setPath]=useState(window.location.pathname)
  const cleanPath=path.replace(/\/+$/,'')
  const isProductsPage=cleanPath==='/products'
+ const productDetailsMatch=cleanPath.match(/^\/products\/([^/]+)$/)
  const isLoginPage=cleanPath==='/login'
  const isSignupPage=cleanPath==='/signup'
  const isContactPage=cleanPath==='/contact'
  const isAboutPage=cleanPath==='/about'
  const isWishlistPage=cleanPath==='/wishlist'
  const isCartPage=cleanPath==='/cart'
+ const isCheckoutPage=cleanPath==='/checkout'
+ const isOrderSuccessPage=cleanPath==='/order-success'
  const isProfilePage=cleanPath==='/profile'
  const isAddressesPage=cleanPath==='/addresses'
  const isAccountWishlistPage=cleanPath==='/profile/wishlist'
  const isOrdersPage=cleanPath==='/orders'
+ const orderDetailsMatch=cleanPath.match(/^\/orders\/([^/]+)$/)
  const isPaymentsPage=cleanPath==='/payments'
  const isNotificationsPage=cleanPath==='/notifications'
+ const isSupportPage=cleanPath==='/support'
+ const isSettingsPage=cleanPath==='/settings'
  const [cartItems,setCartItems]=useState(()=>readSaved('meena-cart',{})),[liked,setLiked]=useState(()=>readSaved('meena-wishlist',[]))
  const [panel,setPanel]=useState(null)
  const [profile,setProfile]=useState(()=>readSaved('meena-profile',{name:'',email:''}))
@@ -92,7 +111,7 @@ function App(){
  const total=products.reduce((sum,p)=>sum+p.price*(cartItems[p.name]||0),0)
  const _openPanel=(name,event)=>{lastTrigger.current=event?.currentTarget;setPanel(name)}
  const closePanel=()=>{setPanel(null);lastTrigger.current?.focus()}
- const addToCart=name=>setCartItems(items=>({...items,[name]:(items[name]||0)+1}))
+ const addToCart=(name,quantity=1)=>setCartItems(items=>{const next={...items,[name]:(items[name]||0)+quantity};localStorage.setItem('meena-cart',JSON.stringify(next));return next})
  const changeQuantity=(name,delta)=>setCartItems(items=>{const next={...items};next[name]=Math.max(0,(next[name]||0)+delta);if(!next[name])delete next[name];return next})
  useEffect(()=>{localStorage.setItem('meena-cart',JSON.stringify(cartItems))},[cartItems])
  useEffect(()=>{localStorage.setItem('meena-wishlist',JSON.stringify(liked))},[liked])
@@ -122,12 +141,18 @@ function App(){
  if(isAboutPage)return <><StoreNavbar active="about"/><AboutPage/><Footer/></>
  if(isWishlistPage)return <WishlistPage products={products}/>
  if(isCartPage)return <CartPage products={products}/>
+ if(isCheckoutPage){let saved={};try{saved=JSON.parse(sessionStorage.getItem('meena-checkout-product'))||{}}catch{}const checkoutProduct=productCatalog.find(item=>item.name===saved.name)||productCatalog.find(item=>cartItems[item.name]>0)||products[0];return <CheckoutPage product={checkoutProduct} initialQuantity={Math.max(1,Number(saved.quantity)||1)} cartCount={cart} wishlistCount={liked.length}/>}
+ if(isOrderSuccessPage){let order={};try{order=JSON.parse(localStorage.getItem('meena-last-order'))||{}}catch{}const orderedProduct=productCatalog.find(item=>item.name===order.product)||products[0];return <OrderSuccessPage order={order} product={orderedProduct} recommendations={productCatalog.filter(item=>item.name!==orderedProduct.name).slice(0,5)} cartCount={cart} wishlistCount={liked.length} onAdd={name=>addToCart(name)}/>}
  if(isProfilePage)return <ProfilePage/>
  if(isAddressesPage)return <SavedAddressesPage/>
  if(isAccountWishlistPage)return <AccountWishlistPage products={products}/>
+ if(orderDetailsMatch)return <OrderDetailsPage orderId={decodeURIComponent(orderDetailsMatch[1])}/>
  if(isOrdersPage)return <OrdersPage/>
  if(isPaymentsPage)return <PaymentMethodsPage/>
  if(isNotificationsPage)return <NotificationsPage/>
+ if(isSupportPage)return <HelpSupportPage/>
+ if(isSettingsPage)return <SettingsPage/>
+ if(productDetailsMatch){const slug=decodeURIComponent(productDetailsMatch[1]);const product=productCatalog.find(item=>item.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')===slug);return product?<ProductDetailsPage product={product} cartCount={cart} wishlistCount={liked.length} liked={liked.includes(product.name)} onToggleLike={()=>toggle(product.name)} onAdd={quantity=>addToCart(product.name,quantity)}/>:<><StoreNavbar active="products"/><main className="empty"><h1>Product not found</h1><a href="/products">Back to products</a></main><Footer/></>}
  if(isProductsPage)return <ProductsPage products={products}/>
  return <>
   <StoreNavbar active="home" wishlistCount={liked.length} cartCount={cart} onProfile={()=>{history.pushState({},'','/login');window.dispatchEvent(new PopStateEvent('popstate'))}}/>

@@ -28,6 +28,7 @@ export default function ProductsPage({products}){
   return [...filtered].sort((a,b)=>sort==='price-low'?a.price-b.price:sort==='price-high'?b.price-a.price:a.name.localeCompare(b.name))
  },[allProducts,category,query,sort])
  const share=async p=>{try{await navigator.clipboard.writeText(`${location.origin}/products#${p.name.toLowerCase().replaceAll(' ','-')}`);setNotice('Product link copied')}catch{setNotice('Could not copy the product link')}}
+ const openDetails=name=>{sessionStorage.setItem('meena-checkout-product',JSON.stringify({name,quantity:1}));history.pushState({},'','/checkout');window.dispatchEvent(new PopStateEvent('popstate'));window.scrollTo(0,0)}
  return <div className="catalog-page">
   <StoreNavbar active="products" query={query} onQueryChange={setQuery} wishlistCount={liked.length} cartCount={count}/>
   <main className="catalog-main">
@@ -62,7 +63,7 @@ export default function ProductsPage({products}){
       <div className="catalog-price"><strong>₹{(unitPrice*quantity).toLocaleString('en-IN')}</strong></div>
       <p className="catalog-unit-price">₹{unitPrice} × {quantity} {quantity===1?'Pack':'Packs'} · {weight>=1000?`${weight/1000} KG`:`${weight} G`}</p>
       <p className="minimum"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8l9-5Zm0 9v10M3 8l9 5 9-5M7 5.8l9 5"/></svg>Minimum order: {minimum} {minimum===1?'Pack':'Packs'}</p>
-      <button className="catalog-buy" onClick={()=>add(p.name,quantity)}>BUY NOW</button>
+      <button className="catalog-buy" onClick={()=>openDetails(p.name)}>BUY NOW</button>
      </div>
     </article>
    })}</section>}
