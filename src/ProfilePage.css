@@ -6,6 +6,11 @@
 .profile-reference{
  --profile-ink:#11263f;
  --profile-green:#087548;
+ --profile-green-dark:#005c35;
+ --profile-leaf:#79b82a;
+ --profile-leaf-bright:#9acb3b;
+ --profile-pale:#f1f8e8;
+ --profile-pale-strong:#e5f2d6;
  --profile-muted:#6f7f91;
  min-height:100vh;
  padding:30px clamp(16px,3vw,48px) 42px;
@@ -28,6 +33,7 @@
 .profile-reference aside nav button span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .profile-reference aside nav button:hover,.profile-reference aside>button:hover{transform:translateX(2px);box-shadow:none!important}
 .profile-reference aside nav button[class*="!bg-[#087a49]"]{background:linear-gradient(135deg,#0b8150,#07683f)!important;box-shadow:0 8px 20px rgba(8,117,72,.2)!important}
+.profile-reference aside nav button[class*="!bg-[#087a49]"]:before{content:'';position:absolute;inset:7px auto 7px 0;width:3px;border-radius:0 3px 3px 0;background:var(--profile-leaf-bright)}
 .profile-reference aside>div:last-child{position:relative;min-height:292px!important;margin-top:14px!important;padding:23px 20px!important;overflow:hidden;border-radius:15px!important;background:linear-gradient(145deg,#f1f5e3,#e8efd5)!important}
 .profile-reference aside>div:last-child:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(4,62,38,.1));pointer-events:none}
 .profile-reference aside>div:last-child h2{position:relative;z-index:2;max-width:180px;margin:0!important;font-size:28px!important;line-height:1.12;color:#093e32!important}
@@ -45,15 +51,35 @@
 .profile-reference>div>section>div:first-child>div:last-child>div:first-child{width:108px!important;height:108px!important;border-width:4px!important;font-size:34px!important}
 .profile-reference>div>section>div:first-child h2{display:flex;align-items:center;gap:8px;font-size:clamp(30px,2.4vw,40px)!important;line-height:1.05!important;color:#064b36!important}
 .profile-reference>div>section>div:first-child p{margin-top:9px!important;font-size:13px!important;color:#395f56!important}
-.profile-reference>div>section>div:first-child span.mt-4{margin-top:14px!important;padding:7px 13px!important;background:#ffecbd!important;font-size:12px!important}
+.profile-reference>div>section>div:first-child span.mt-4{margin-top:14px!important;padding:7px 13px!important;border:1px solid #d6e9bd;background:linear-gradient(135deg,#f3f9e9,#e6f2d5)!important;color:#315d24!important;font-size:12px!important}
+.profile-reference>div>section>div:first-child span.mt-4 svg{color:var(--profile-leaf)!important}
 .profile-verified{display:inline-flex;color:#07975e}.profile-verified svg{width:22px;height:22px}
 
+/* Brand-matched controls: deep logo green, leaf highlight, and soft botanical hover. */
+.profile-reference .profile-outline-button,
+.profile-dialog .profile-outline-button{
+ border-color:#8eb77b!important;
+ background:#fff!important;
+ color:var(--profile-green-dark,#005c35)!important;
+ box-shadow:0 3px 10px rgba(0,92,53,.07)!important
+}
+.profile-reference .profile-outline-button svg,.profile-dialog .profile-outline-button svg{color:var(--profile-leaf,#79b82a)!important;stroke-width:2.25}
+.profile-reference .profile-outline-button:hover,.profile-dialog .profile-outline-button:hover{border-color:var(--profile-green)!important;background:linear-gradient(135deg,#f6faef,#eaf5dc)!important;color:#004f2e!important;box-shadow:0 7px 18px rgba(0,92,53,.13)!important;transform:translateY(-1px)}
+.profile-reference .profile-primary-button,.profile-dialog .profile-primary-button{background:linear-gradient(135deg,#078849 0%,#006537 72%,#00562f 100%)!important;color:#fff!important;box-shadow:0 8px 18px rgba(0,99,55,.22)!important}
+.profile-reference .profile-primary-button svg,.profile-dialog .profile-primary-button svg{color:#c8ef80!important;stroke-width:2.25}
+.profile-reference .profile-primary-button:hover,.profile-dialog .profile-primary-button:hover{background:linear-gradient(135deg,#159653,#006b3a)!important;box-shadow:0 10px 22px rgba(0,99,55,.28)!important;transform:translateY(-1px)}
+
 .profile-reference>div>section>div:nth-child(2){grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;padding:13px!important}
-.profile-reference>div>section>div:nth-child(2)>button{min-height:116px!important;gap:13px!important;padding:15px!important;border-radius:14px!important;overflow:hidden}
+.profile-reference>div>section>div:nth-child(2)>button{min-height:116px!important;gap:13px!important;padding:15px!important;border:1px solid #d8e7ca!important;border-radius:14px!important;overflow:hidden;background:linear-gradient(145deg,#fbfdf7,#f3f8ec)!important;color:var(--profile-green-dark)!important;box-shadow:inset 0 1px rgba(255,255,255,.9)!important}
+.profile-reference>div>section>div:nth-child(2)>button:nth-child(even){background:linear-gradient(145deg,#f7fbef,#edf6e2)!important}
+.profile-reference>div>section>div:nth-child(2)>button:hover{border-color:#9ac57c!important;background:linear-gradient(145deg,#f8fced,#e8f4d8)!important;box-shadow:0 9px 19px rgba(5,93,58,.12)!important}
 .profile-reference>div>section>div:nth-child(2)>button>span:first-child{width:46px!important;height:46px!important}
-.profile-reference>div>section>div:nth-child(2) b{font-size:25px!important;line-height:1}
-.profile-reference>div>section>div:nth-child(2) small{display:block;margin-top:5px;font-size:12px;white-space:nowrap}
-.profile-reference>div>section>div:nth-child(2) em{margin-top:12px!important;font-size:11px!important;white-space:nowrap}
+.profile-reference .profile-stat-icon{border:1px solid #d5e8bf;background:linear-gradient(145deg,#eff8e2,#dfefcc)!important;color:#087548!important}
+.profile-reference .profile-stat-icon svg{stroke-width:2.15}
+.profile-reference>div>section>div:nth-child(2) b{font-size:25px!important;line-height:1;color:#075c38!important}
+.profile-reference>div>section>div:nth-child(2) small{display:block;margin-top:5px;font-size:12px;white-space:nowrap;color:#3d554a!important}
+.profile-reference>div>section>div:nth-child(2) em{margin-top:12px!important;font-size:11px!important;white-space:nowrap;color:#087548!important}
+.profile-reference>div>section>div:nth-child(2) em svg{color:var(--profile-leaf)!important;stroke-width:2.5}
 
 .profile-reference article{padding:24px 26px!important;scroll-margin-top:170px}
 .profile-reference article header{align-items:flex-start!important;margin-bottom:22px!important}
@@ -63,18 +89,21 @@
 .profile-reference article:first-of-type>div{row-gap:22px!important}
 .profile-reference article:first-of-type>div>div{gap:14px!important;min-width:0}
 .profile-reference article:first-of-type>div>div>span:first-child{width:40px;height:40px;border-radius:12px}
+.profile-reference .profile-info-icon{border:1px solid #dcebc9;background:linear-gradient(145deg,#f1f8e8,#e5f2d7)!important;color:#087548!important}
+.profile-reference .profile-info-icon svg{stroke-width:2.1}
 .profile-reference article:first-of-type small{font-size:11px!important;color:#8090a1!important}
 .profile-reference article:first-of-type p{margin-top:4px!important;font-size:14px!important;overflow-wrap:anywhere}
 .profile-reference article:nth-of-type(2)>div{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 .profile-reference article:nth-of-type(2)>div>div{gap:16px!important;padding:17px!important;border-radius:14px!important;background:#fcfdf9}
 .profile-reference article:nth-of-type(2) p{margin-top:7px!important;font-size:12px!important;line-height:1.55}
 .profile-reference article:nth-of-type(2) button{min-height:30px}
-.profile-reference #payment-methods>div{padding:17px 18px!important;gap:16px!important;border-radius:14px!important}
+.profile-reference #payment-methods>div{padding:17px 18px!important;gap:16px!important;border-color:#cfe2b7!important;border-radius:14px!important;background:linear-gradient(135deg,#fbfdf7,#f4f9eb)!important}
+.profile-reference #payment-methods>div>div>span{border:1px solid #dcebc9;background:#edf6e4!important;color:#087548!important}
 .profile-reference #payment-methods>div b{font-size:13px}
 .profile-reference #payment-methods>div p{margin-top:5px!important;font-size:11px!important;line-height:1.5}
 .profile-reference #payment-methods>div>button{min-height:40px!important;flex-shrink:0;white-space:nowrap}
 
-.profile-reference button:focus-visible,.profile-dialog button:focus-visible,.profile-dialog input:focus-visible{outline:3px solid #e8b73e;outline-offset:3px}
+.profile-reference button:focus-visible,.profile-dialog button:focus-visible,.profile-dialog input:focus-visible{outline:3px solid var(--profile-leaf-bright,#9acb3b);outline-offset:3px}
 .profile-reference button:hover{box-shadow:0 5px 16px rgba(7,88,60,.11)}
 .profile-dialog{max-height:90dvh;overflow-y:auto;color:#102e25}
 .profile-dialog input{box-sizing:border-box}
@@ -82,6 +111,11 @@
 .profile-address-form{display:grid;gap:16px;margin-top:20px}
 .profile-address-form label{display:grid;gap:7px;font-size:14px}
 .profile-address-form input{width:100%;padding:11px;border:1px solid #bbcec0;border-radius:8px;font:inherit}
+
+/* Keep the closing promise strip on the same logo palette. */
+.profile-reference+section{border-top:1px solid #dce9ce!important;background:linear-gradient(90deg,#f4f9ea,#edf6e3 52%,#f5f9ec)!important}
+.profile-reference+section>div>span:first-child{border:1px solid #cfe4b5;background:linear-gradient(145deg,#e6f3d6,#d7ebc0)!important;color:#076b40!important}
+.profile-reference+section b{color:#075c38!important}
 
 @media(max-width:1250px){
  .profile-reference>div{grid-template-columns:235px minmax(0,1fr)!important;gap:16px!important}
