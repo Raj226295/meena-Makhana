@@ -10,6 +10,7 @@ import CartPage from './CartPage'
 import ProfilePage from './ProfilePage'
 import SavedAddressesPage from './SavedAddressesPage'
 import AccountWishlistPage from './AccountWishlistPage'
+import OrdersPage from './OrdersPage'
 import ProductCardSkeleton from './ProductCardSkeleton'
 import useProductsLoading from './useProductsLoading'
 import { useEffect, useRef, useState } from 'react'
@@ -77,6 +78,7 @@ function App(){
  const isProfilePage=cleanPath==='/profile'
  const isAddressesPage=cleanPath==='/addresses'
  const isAccountWishlistPage=cleanPath==='/profile/wishlist'
+ const isOrdersPage=cleanPath==='/orders'
  const [cartItems,setCartItems]=useState(()=>readSaved('meena-cart',{})),[liked,setLiked]=useState(()=>readSaved('meena-wishlist',[]))
  const [panel,setPanel]=useState(null)
  const [profile,setProfile]=useState(()=>readSaved('meena-profile',{name:'',email:''}))
@@ -119,6 +121,7 @@ function App(){
  if(isProfilePage)return <ProfilePage/>
  if(isAddressesPage)return <SavedAddressesPage/>
  if(isAccountWishlistPage)return <AccountWishlistPage products={products}/>
+ if(isOrdersPage)return <OrdersPage/>
  if(isProductsPage)return <ProductsPage products={products}/>
  return <>
   <StoreNavbar active="home" wishlistCount={liked.length} cartCount={cart} onProfile={()=>{history.pushState({},'','/login');window.dispatchEvent(new PopStateEvent('popstate'))}}/>
